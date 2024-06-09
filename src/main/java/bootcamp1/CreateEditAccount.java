@@ -16,7 +16,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-public class CreateAccount {
+public class CreateEditAccount {
 
 	//
 
@@ -120,7 +120,8 @@ public class CreateAccount {
 
 		WebElement titleNewAccount = driver.findElement(By.xpath("//h2[contains(text(),'New Account')]"));
 		wait.until(ExpectedConditions.visibilityOf(titleNewAccount));
-//Checking for the Window Handles
+
+		// Checking for the Window Handles
 
 		Set<String> CurrentOpenedWindows = driver.getWindowHandles();
 		for (String OpenWindow : CurrentOpenedWindows) {
@@ -162,14 +163,33 @@ public class CreateAccount {
 		if (txtMessage.getText().trim().contains(AccountName)) {
 			System.out.println("Account is added successful");
 		}
+
+		// Opening the Accounts Tab Table to verify the Added Account
+
+		// Checking for the Window Handles
+
+		Set<String> Windows = driver.getWindowHandles();
+		for (String OpenWindow : Windows) {
+			if (!OpenWindow.equals(WindowHandle)) {
+				driver.switchTo().window(OpenWindow);
+			}
+		}
+		// Navigating through the sales option and clicking on Accounts
+		List<WebElement> tabOption = driver
+				.findElements(By.xpath("//*[@role='navigation']//*[@role='list']//one-app-nav-bar-item-root//a"));
+		for (int i = 0; i <= (tabOption.size()) - 1; i++) {
+			String TabName = tabOption.get(i).getAttribute("title").trim();
+			if (TabName.equals("Accounts")) {
+				js.executeScript("arguments[0].click();", tabOption.get(i));
+				break;
+			}
+		}
+
 		// Checking for the added element in the table
 
-		List<WebElement> colAddedAccounts = driver
-				.findElements(By.xpath("//*[@data-aura-class='uiVirtualDataTable']//tbody//th//a"));
-
 		// Validating the added Account in the row
-		wait.until(ExpectedConditions.visibilityOfAllElements(colAddedAccounts));
-		for (WebElement webElement : colAddedAccounts) {
+		wait.until(ExpectedConditions.visibilityOfAllElements(driver.findElements(By.xpath("//table/tbody/tr"))));
+		for (WebElement webElement : driver.findElements(By.xpath("//table/tbody/tr"))) {
 			if (webElement.getText().trim().equals(AccountName)) {
 
 				System.out.println("Account is verified in the table");
@@ -184,13 +204,13 @@ public class CreateAccount {
 			txtSearchAccount.sendKeys(AccountName);
 			txtSearchAccount.sendKeys(Keys.ENTER);
 
-			wait.until(ExpectedConditions.visibilityOfAllElements(colAddedAccounts));
+			wait.until(ExpectedConditions.visibilityOfAllElements(driver.findElements(By.xpath("//table/tbody/tr"))));
 
 			// Clicking on the Edit Icon
 			List<WebElement> ddEditAction = driver
 					.findElements(By.xpath("//*[@role='gridcell']//*[contains(text(),'Show Actions')]"));
-			for (int i = 0; i <= (colAddedAccounts.size()) - 1; i++) {
-				if (colAddedAccounts.get(i).getText().trim().equals(AccountName)) {
+			for (int i = 0; i <= (driver.findElements(By.xpath("//table/tbody/tr")).size()) - 1; i++) {
+				if (driver.findElements(By.xpath("//table/tbody/tr")).get(i).getText().trim().equals(AccountName)) {
 					js.executeScript("arguments[0].click();", ddEditAction.get(i));
 					break;
 				}
