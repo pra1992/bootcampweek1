@@ -7,6 +7,8 @@ import java.util.Set;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.StaleElementReferenceException;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -159,6 +161,7 @@ public class CreateEditAccount {
 		actions.moveToElement(btnSave).click().build().perform();
 
 		// Verifying the Success Toaster Message
+		
 		WebElement txtMessage = driver.findElement(By.xpath("//*[@data-aura-class='forceActionsText']//a"));
 		if (txtMessage.getText().trim().contains(AccountName)) {
 			System.out.println("Account is added successful");
@@ -203,19 +206,36 @@ public class CreateEditAccount {
 
 			txtSearchAccount.sendKeys(AccountName);
 			txtSearchAccount.sendKeys(Keys.ENTER);
+          for (int i=0; i<=(driver.findElements(By.xpath("//table/tbody/tr"))).size()-1; i++) {
+        	  try {
+      			wait.until(ExpectedConditions.visibilityOfAllElements(driver.findElements(By.xpath("//table/tbody/tr"))));
+      			}catch (StaleElementReferenceException e) {
+      				wait.until(ExpectedConditions.stalenessOf((driver.findElements(By.xpath("//table/tbody/tr"))).get(i)));
+      				driver.findElements(By.xpath("//table/tbody/tr"));
+		      }catch (TimeoutException e) {
+		    	  txtSearchAccount.clear();
+		    	  txtSearchAccount.sendKeys(AccountName);
+					txtSearchAccount.sendKeys(Keys.ENTER);
+		      }
+        	  
+          }
+//			// Clicking on the Edit Icon
+//			List<WebElement> colAccountsTable = driver
+//					.findElements(By.xpath("//table/thead/tr/th"));
+//			for (int j = 0; j <= (colAccountsTable).size() - 1; j++) {
+//				try {
+//				String value = colAccountsTable.get(j).getAttribute("aria-label").trim();
+//				if ((value.contains("Action"))) {
+//					js.executeScript("arguments[0].click();", driver.findElement(By.xpath("((//*[@data-aura-class='forceVirtualAction']//a)")));
+//					js.executeScript("arguments[0].click();", driver.findElement(By.xpath("//*[@class='branding-actions actionMenu']//a[@title='Edit']")));
+//					break;
+//				}}
+//				catch (java.lang.NullPointerException e) {
+//				    continue;	
+//				}
+//				}
 
-			wait.until(ExpectedConditions.visibilityOfAllElements(driver.findElements(By.xpath("//table/tbody/tr"))));
-
-			// Clicking on the Edit Icon
-			List<WebElement> ddEditAction = driver
-					.findElements(By.xpath("//*[@role='gridcell']//*[contains(text(),'Show Actions')]"));
-			for (int i = 0; i <= (driver.findElements(By.xpath("//table/tbody/tr")).size()) - 1; i++) {
-				if (driver.findElements(By.xpath("//table/tbody/tr")).get(i).getText().trim().equals(AccountName)) {
-					js.executeScript("arguments[0].click();", ddEditAction.get(i));
-					break;
-				}
-
-			}
+ 			js.executeScript("arguments[0].click()", driver.findElement(By.xpath("(//*[@data-aura-class='forceVirtualAction']//a)")));
 
 			WebElement btnEdit = driver.findElement(By.xpath("//a[@title='Edit']"));
 			js.executeScript("arguments[0].click();", btnEdit);
@@ -238,12 +258,15 @@ public class CreateEditAccount {
 
 			List<WebElement> optionsAccountType = driver
 					.findElements(By.xpath("//label[text()='Type']/..//*[@class='slds-truncate']"));
-
+               try {
 			for (int i = 0; i <= (optionsAccountType.size()) - 1; i++) {
-				String AccountTypeOption = optionsAccountType.get(i).getText().trim();
+				String AccountTypeOption = optionsAccountType.get(i).getAttribute("title").trim();
+				
 				if (AccountTypeOption.contains("Technology Partner")) {
 					js.executeScript("arguments[0].click();", optionsAccountType.get(i));
 					break;
+				}}}catch (java.lang.NullPointerException e){
+					continue;
 				}
 
 				// Selecting the Industry as Health Care
@@ -255,8 +278,8 @@ public class CreateEditAccount {
 						.findElements(By.xpath("//label[text()='Industry']/..//*[@class='slds-truncate']"));
 
 				for (int j = 0; j <= (optionsIndustry.size()) - 1; j++) {
-					String IndustryTypeOption = optionsIndustry.get(j).getText().trim();
-					if (AccountTypeOption.contains("Healthcare")) {
+					String IndustryTypeOption = optionsIndustry.get(j).getAttribute("title").trim();
+					if (IndustryTypeOption.contains("Healthcare")) {
 						js.executeScript("arguments[0].click();", optionsIndustry.get(j));
 						break;
 					}
@@ -309,7 +332,7 @@ public class CreateEditAccount {
 						.findElements(By.xpath("//label[text()='Customer Priority']/..//*[@class='slds-truncate']"));
 
 				for (int j = 0; j <= (optionsCustomerPriority.size()) - 1; j++) {
-					String CustomerPriorityTypeOption = optionsCustomerPriority.get(j).getText().trim();
+					String CustomerPriorityTypeOption = optionsCustomerPriority.get(j).getAttribute("title").trim();
 					if (CustomerPriorityTypeOption.contains("Low")) {
 						js.executeScript("arguments[0].click();", optionsCustomerPriority.get(j));
 						break;
@@ -326,7 +349,7 @@ public class CreateEditAccount {
 						.findElements(By.xpath("//label[text()='SLA']/..//*[@class='slds-truncate']"));
 
 				for (int j = 0; j <= (optionsSLA.size()) - 1; j++) {
-					String SLATypeOption = optionsSLA.get(j).getText().trim();
+					String SLATypeOption = optionsSLA.get(j).getAttribute("title".trim());
 					if (SLATypeOption.contains("Silver")) {
 						js.executeScript("arguments[0].click();", optionsSLA.get(j));
 						break;
@@ -345,13 +368,15 @@ public class CreateEditAccount {
 
 				List<WebElement> optionsActive = driver
 						.findElements(By.xpath("//label[text()='Active']/..//*[@class='slds-truncate']"));
-
+                try {
 				for (int j = 0; j <= (optionsActive.size()) - 1; j++) {
-					String ActiveOption = optionsActive.get(j).getText().trim();
-					if (ActiveOption.contains("No")) {
+					String ActiveOption = optionsActive.get(j).getAttribute("title").trim();
+					if (ActiveOption.equals("No")) {
 						js.executeScript("arguments[0].click();", optionsActive.get(j));
 						break;
 					}
+				}} catch(java.lang.NullPointerException e) {
+					continue;
 				}
 
 				// Select Upsell Oppurtunity as No
@@ -362,22 +387,31 @@ public class CreateEditAccount {
 
 				List<WebElement> OptionsUpsell = driver
 						.findElements(By.xpath("//label[text()='Upsell Opportunity']/..//*[@class='slds-truncate']"));
-
+                try {
 				for (int j = 0; j <= (OptionsUpsell.size()) - 1; j++) {
-					String UpsellOption = OptionsUpsell.get(j).getText().trim();
-					if (UpsellOption.contains("No")) {
+					String UpsellOption = OptionsUpsell.get(j).getAttribute("title").trim();
+					if (UpsellOption.equals("No")) {
 						js.executeScript("arguments[0].click();", OptionsUpsell.get(j));
 						break;
 					}
+				}}catch(java.lang.NullPointerException e) {
+					continue;
 				}
 
 				// Clicking on Save
 
 				// Clicking on Save Button
+                try {
 				actions.moveToElement(btnSave).click().build().perform();
+                } catch (org.openqa.selenium.StaleElementReferenceException e) {
+                	wait.until(ExpectedConditions.stalenessOf(btnSave));
+                	btnSave = driver.findElement(By.xpath("//*[@name='SaveEdit']"));
+                	wait.until(ExpectedConditions.visibilityOf(btnSave));
+                	actions.moveToElement(btnSave).click().build().perform();
+                }
 
 				// Verifying the Success Toaster Message
-				if (txtMessage.getText().trim().contains(AccountName + "was" + "saved")) {
+				if (driver.findElement(By.xpath("//*[@data-aura-class='forceActionsText']")).getText().trim().contains("saved")) {
 					System.out.println("Account is saved successful");
 				}
 
@@ -390,7 +424,7 @@ public class CreateEditAccount {
 
 				// Validating the added Account in the row
 				wait.until(ExpectedConditions.visibilityOfAllElements(rowAddedAccounts));
-				for (int x = 0; i <= (rowAddedAccounts.size()) - 1; x++) {
+				for (int x = 0; x <= (rowAddedAccounts.size()) - 1; x++) {
 					if (rowAddedAccounts.get(x).getText().trim().equals(AccountName)) {
 
 						WebElement row = driver.findElement(
@@ -417,4 +451,4 @@ public class CreateEditAccount {
 			}
 		}
 	}
-}
+
