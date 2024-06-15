@@ -161,7 +161,7 @@ public class CreateEditAccount {
 		actions.moveToElement(btnSave).click().build().perform();
 
 		// Verifying the Success Toaster Message
-		
+
 		WebElement txtMessage = driver.findElement(By.xpath("//*[@data-aura-class='forceActionsText']//a"));
 		if (txtMessage.getText().trim().contains(AccountName)) {
 			System.out.println("Account is added successful");
@@ -206,19 +206,21 @@ public class CreateEditAccount {
 
 			txtSearchAccount.sendKeys(AccountName);
 			txtSearchAccount.sendKeys(Keys.ENTER);
-          for (int i=0; i<=(driver.findElements(By.xpath("//table/tbody/tr"))).size()-1; i++) {
-        	  try {
-      			wait.until(ExpectedConditions.visibilityOfAllElements(driver.findElements(By.xpath("//table/tbody/tr"))));
-      			}catch (StaleElementReferenceException e) {
-      				wait.until(ExpectedConditions.stalenessOf((driver.findElements(By.xpath("//table/tbody/tr"))).get(i)));
-      				driver.findElements(By.xpath("//table/tbody/tr"));
-		      }catch (TimeoutException e) {
-		    	  txtSearchAccount.clear();
-		    	  txtSearchAccount.sendKeys(AccountName);
+			for (int i = 0; i <= (driver.findElements(By.xpath("//table/tbody/tr"))).size() - 1; i++) {
+				try {
+					wait.until(ExpectedConditions
+							.visibilityOfAllElements(driver.findElements(By.xpath("//table/tbody/tr"))));
+				} catch (StaleElementReferenceException e) {
+					wait.until(
+							ExpectedConditions.stalenessOf((driver.findElements(By.xpath("//table/tbody/tr"))).get(i)));
+					driver.findElements(By.xpath("//table/tbody/tr"));
+				} catch (TimeoutException e) {
+					txtSearchAccount.clear();
+					txtSearchAccount.sendKeys(AccountName);
 					txtSearchAccount.sendKeys(Keys.ENTER);
-		      }
-        	  
-          }
+				}
+
+			}
 //			// Clicking on the Edit Icon
 //			List<WebElement> colAccountsTable = driver
 //					.findElements(By.xpath("//table/thead/tr/th"));
@@ -234,8 +236,14 @@ public class CreateEditAccount {
 //				    continue;	
 //				}
 //				}
-
- 			js.executeScript("arguments[0].click()", driver.findElement(By.xpath("(//*[@data-aura-class='forceVirtualAction']//a)")));
+			try {
+				js.executeScript("arguments[0].click()",
+						driver.findElement(By.xpath("(//*[@data-aura-class='forceVirtualAction']//a)")));
+			} catch (org.openqa.selenium.NoSuchElementException e) {
+				txtSearchAccount.clear();
+				txtSearchAccount.sendKeys(AccountName);
+				txtSearchAccount.sendKeys(Keys.ENTER);
+			}
 
 			WebElement btnEdit = driver.findElement(By.xpath("//a[@title='Edit']"));
 			js.executeScript("arguments[0].click();", btnEdit);
@@ -258,197 +266,179 @@ public class CreateEditAccount {
 
 			List<WebElement> optionsAccountType = driver
 					.findElements(By.xpath("//label[text()='Type']/..//*[@class='slds-truncate']"));
-               try {
-			for (int i = 0; i <= (optionsAccountType.size()) - 1; i++) {
-				String AccountTypeOption = optionsAccountType.get(i).getAttribute("title").trim();
-				
-				if (AccountTypeOption.contains("Technology Partner")) {
-					js.executeScript("arguments[0].click();", optionsAccountType.get(i));
+			try {
+				for (int i = 0; i <= (optionsAccountType.size()) - 1; i++) {
+					String AccountTypeOption = optionsAccountType.get(i).getAttribute("title").trim();
+
+					if (AccountTypeOption.contains("Technology Partner")) {
+						js.executeScript("arguments[0].click();", optionsAccountType.get(i));
+						break;
+					}
+				}
+			} catch (java.lang.NullPointerException e) {
+				continue;
+			}
+
+			// Selecting the Industry as Health Care
+			WebElement ddIndustry = driver
+					.findElement(By.xpath("//*[contains(@aria-label,'Industry - Current Selection')]"));
+			js.executeScript("arguments[0].click();", ddIndustry);
+
+			List<WebElement> optionsIndustry = driver
+					.findElements(By.xpath("//label[text()='Industry']/..//*[@class='slds-truncate']"));
+
+			for (int j = 0; j <= (optionsIndustry.size()) - 1; j++) {
+				String IndustryTypeOption = optionsIndustry.get(j).getAttribute("title").trim();
+				if (IndustryTypeOption.contains("Healthcare")) {
+					js.executeScript("arguments[0].click();", optionsIndustry.get(j));
 					break;
-				}}}catch (java.lang.NullPointerException e){
-					continue;
 				}
+			}
 
-				// Selecting the Industry as Health Care
-				WebElement ddIndustry = driver
-						.findElement(By.xpath("//*[contains(@aria-label,'Industry - Current Selection')]"));
-				js.executeScript("arguments[0].click();", ddIndustry);
+			// Identifying and filling the Billing Address
+			js.executeScript("document.querySelector('.actionBody').scrollBy(0,750)");
 
-				List<WebElement> optionsIndustry = driver
-						.findElements(By.xpath("//label[text()='Industry']/..//*[@class='slds-truncate']"));
+			WebElement txtBillingStreet = driver.findElement(
+					By.xpath("//*[text()='Billing Address']/..//textarea[@autocomplete='street-address']"));
+			WebElement txtBillingCity = driver
+					.findElement(By.xpath("//*[text()='Billing Address']/..//*[@name='city']"));
+			WebElement txtBillingZipCode = driver
+					.findElement(By.xpath("//*[text()='Billing Address']/..//*[@name='postalCode']"));
+			WebElement txtBillingProvince = driver
+					.findElement(By.xpath("//*[text()='Billing Address']/..//*[@name='province']"));
+			WebElement txtBillingCountry = driver
+					.findElement(By.xpath("//*[text()='Billing Address']/..//*[@name='province']"));
 
-				for (int j = 0; j <= (optionsIndustry.size()) - 1; j++) {
-					String IndustryTypeOption = optionsIndustry.get(j).getAttribute("title").trim();
-					if (IndustryTypeOption.contains("Healthcare")) {
-						js.executeScript("arguments[0].click();", optionsIndustry.get(j));
-						break;
-					}
+			txtBillingStreet.sendKeys("Chennai1");
+			txtBillingCity.sendKeys("Chennai2");
+			txtBillingZipCode.sendKeys("Chennai3");
+			txtBillingCountry.sendKeys("Chennai4");
+
+			// Identifying and Filling the Shipping Address
+
+			WebElement txtShippingStreet = driver.findElement(
+					By.xpath("//*[text()='Shipping Address']/..//textarea[@autocomplete='street-address']"));
+			WebElement txtShippingCity = driver
+					.findElement(By.xpath("//*[text()='Shipping Address']/..//*[@name='city']"));
+			WebElement txtShippingZipCode = driver
+					.findElement(By.xpath("//*[text()='Shipping Address']/..//*[@name='postalCode']"));
+			WebElement txtShippingProvince = driver
+					.findElement(By.xpath("//*[text()='Shipping Address']/..//*[@name='province']"));
+			WebElement txtShippingCountry = driver
+					.findElement(By.xpath("//*[text()='Shipping Address']/..//*[@name='province']"));
+
+			txtShippingStreet.sendKeys("Banglore1");
+			txtShippingCity.sendKeys("Banglore2");
+			txtShippingZipCode.sendKeys("Banglore3");
+			txtShippingCountry.sendKeys("Banglore4");
+
+			// Selecting the Customer Priority as Low
+
+			WebElement ddCustomerPriority = driver
+					.findElement(By.xpath("//*[contains(@aria-label,'Customer Priority - Current Selection')]"));
+			js.executeScript("arguments[0].click();", ddCustomerPriority);
+
+			List<WebElement> optionsCustomerPriority = driver
+					.findElements(By.xpath("//label[text()='Customer Priority']/..//*[@class='slds-truncate']"));
+
+			for (int j = 0; j <= (optionsCustomerPriority.size()) - 1; j++) {
+				String CustomerPriorityTypeOption = optionsCustomerPriority.get(j).getAttribute("title").trim();
+				if (CustomerPriorityTypeOption.contains("Low")) {
+					js.executeScript("arguments[0].click();", optionsCustomerPriority.get(j));
+					break;
 				}
+			}
 
-				// Identifying and filling the Billing Address
-				js.executeScript("document.querySelector('.actionBody').scrollBy(0,750)");
+			// Select SLA as Silver
+			js.executeScript("document.querySelector('.actionBody').scrollBy(0,200)");
 
-				WebElement txtBillingStreet = driver.findElement(
-						By.xpath("//*[text()='Billing Address']/..//textarea[@autocomplete='street-address']"));
-				WebElement txtBillingCity = driver
-						.findElement(By.xpath("//*[text()='Billing Address']/..//*[@name='city']"));
-				WebElement txtBillingZipCode = driver
-						.findElement(By.xpath("//*[text()='Billing Address']/..//*[@name='postalCode']"));
-				WebElement txtBillingProvince = driver
-						.findElement(By.xpath("//*[text()='Billing Address']/..//*[@name='province']"));
-				WebElement txtBillingCountry = driver
-						.findElement(By.xpath("//*[text()='Billing Address']/..//*[@name='province']"));
+			WebElement ddSLA = driver.findElement(By.xpath("//*[contains(@aria-label,'SLA - Current Selection')]"));
+			js.executeScript("arguments[0].click();", ddSLA);
 
-				txtBillingStreet.sendKeys("Chennai1");
-				txtBillingCity.sendKeys("Chennai2");
-				txtBillingZipCode.sendKeys("Chennai3");
-				txtBillingCountry.sendKeys("Chennai4");
+			List<WebElement> optionsSLA = driver
+					.findElements(By.xpath("//label[text()='SLA']/..//*[@class='slds-truncate']"));
 
-				// Identifying and Filling the Shipping Address
-
-				WebElement txtShippingStreet = driver.findElement(
-						By.xpath("//*[text()='Shipping Address']/..//textarea[@autocomplete='street-address']"));
-				WebElement txtShippingCity = driver
-						.findElement(By.xpath("//*[text()='Shipping Address']/..//*[@name='city']"));
-				WebElement txtShippingZipCode = driver
-						.findElement(By.xpath("//*[text()='Shipping Address']/..//*[@name='postalCode']"));
-				WebElement txtShippingProvince = driver
-						.findElement(By.xpath("//*[text()='Shipping Address']/..//*[@name='province']"));
-				WebElement txtShippingCountry = driver
-						.findElement(By.xpath("//*[text()='Shipping Address']/..//*[@name='province']"));
-
-				txtShippingStreet.sendKeys("Banglore1");
-				txtShippingCity.sendKeys("Banglore2");
-				txtShippingZipCode.sendKeys("Banglore3");
-				txtShippingCountry.sendKeys("Banglore4");
-
-				// Selecting the Customer Priority as Low
-
-				WebElement ddCustomerPriority = driver
-						.findElement(By.xpath("//*[contains(@aria-label,'Customer Priority - Current Selection')]"));
-				js.executeScript("arguments[0].click();", ddCustomerPriority);
-
-				List<WebElement> optionsCustomerPriority = driver
-						.findElements(By.xpath("//label[text()='Customer Priority']/..//*[@class='slds-truncate']"));
-
-				for (int j = 0; j <= (optionsCustomerPriority.size()) - 1; j++) {
-					String CustomerPriorityTypeOption = optionsCustomerPriority.get(j).getAttribute("title").trim();
-					if (CustomerPriorityTypeOption.contains("Low")) {
-						js.executeScript("arguments[0].click();", optionsCustomerPriority.get(j));
-						break;
-					}
+			for (int j = 0; j <= (optionsSLA.size()) - 1; j++) {
+				String SLATypeOption = optionsSLA.get(j).getAttribute("title".trim());
+				if (SLATypeOption.contains("Silver")) {
+					js.executeScript("arguments[0].click();", optionsSLA.get(j));
+					break;
 				}
+			}
 
-				// Select SLA as Silver
-				js.executeScript("document.querySelector('.actionBody').scrollBy(0,200)");
+			// 14) Select Active as NO
 
-				WebElement ddSLA = driver.findElement(By.xpath("//*[contains(@aria-label,'SLA - Current Selection')]"));
-				js.executeScript("arguments[0].click();", ddSLA);
+			// Scrolling
 
-				List<WebElement> optionsSLA = driver
-						.findElements(By.xpath("//label[text()='SLA']/..//*[@class='slds-truncate']"));
+			js.executeScript("document.querySelector('.actionBody').scrollBy(0,100)");
 
-				for (int j = 0; j <= (optionsSLA.size()) - 1; j++) {
-					String SLATypeOption = optionsSLA.get(j).getAttribute("title".trim());
-					if (SLATypeOption.contains("Silver")) {
-						js.executeScript("arguments[0].click();", optionsSLA.get(j));
-						break;
-					}
-				}
+			WebElement ddActive = driver
+					.findElement(By.xpath("//*[contains(@aria-label,'Active - Current Selection')]"));
+			js.executeScript("arguments[0].click();", ddActive);
 
-				// 14) Select Active as NO
-
-				// Scrolling
-
-				js.executeScript("document.querySelector('.actionBody').scrollBy(0,100)");
-
-				WebElement ddActive = driver
-						.findElement(By.xpath("//*[contains(@aria-label,'Active - Current Selection')]"));
-				js.executeScript("arguments[0].click();", ddActive);
-
-				List<WebElement> optionsActive = driver
-						.findElements(By.xpath("//label[text()='Active']/..//*[@class='slds-truncate']"));
-                try {
+			List<WebElement> optionsActive = driver
+					.findElements(By.xpath("//label[text()='Active']/..//*[@class='slds-truncate']"));
+			try {
 				for (int j = 0; j <= (optionsActive.size()) - 1; j++) {
 					String ActiveOption = optionsActive.get(j).getAttribute("title").trim();
 					if (ActiveOption.equals("No")) {
 						js.executeScript("arguments[0].click();", optionsActive.get(j));
 						break;
 					}
-				}} catch(java.lang.NullPointerException e) {
-					continue;
 				}
+			} catch (java.lang.NullPointerException e) {
+				continue;
+			}
 
-				// Select Upsell Oppurtunity as No
+			// Select Upsell Oppurtunity as No
 
-				WebElement ddUpsell = driver
-						.findElement(By.xpath("//*[contains(@aria-label,'Upsell Opportunity - Current Selection')]"));
-				js.executeScript("arguments[0].click();", ddUpsell);
+			WebElement ddUpsell = driver
+					.findElement(By.xpath("//*[contains(@aria-label,'Upsell Opportunity - Current Selection')]"));
+			js.executeScript("arguments[0].click();", ddUpsell);
 
-				List<WebElement> OptionsUpsell = driver
-						.findElements(By.xpath("//label[text()='Upsell Opportunity']/..//*[@class='slds-truncate']"));
-                try {
+			List<WebElement> OptionsUpsell = driver
+					.findElements(By.xpath("//label[text()='Upsell Opportunity']/..//*[@class='slds-truncate']"));
+			try {
 				for (int j = 0; j <= (OptionsUpsell.size()) - 1; j++) {
 					String UpsellOption = OptionsUpsell.get(j).getAttribute("title").trim();
 					if (UpsellOption.equals("No")) {
 						js.executeScript("arguments[0].click();", OptionsUpsell.get(j));
 						break;
 					}
-				}}catch(java.lang.NullPointerException e) {
-					continue;
 				}
+			} catch (java.lang.NullPointerException e) {
+				continue;
+			}
 
-				// Clicking on Save
+			// Clicking on Save
 
-				// Clicking on Save Button
-                try {
+			// Clicking on Save Button
+			try {
 				actions.moveToElement(btnSave).click().build().perform();
-                } catch (org.openqa.selenium.StaleElementReferenceException e) {
-                	wait.until(ExpectedConditions.stalenessOf(btnSave));
-                	btnSave = driver.findElement(By.xpath("//*[@name='SaveEdit']"));
-                	wait.until(ExpectedConditions.visibilityOf(btnSave));
-                	actions.moveToElement(btnSave).click().build().perform();
-                }
+			} catch (org.openqa.selenium.StaleElementReferenceException e) {
+				wait.until(ExpectedConditions.stalenessOf(btnSave));
+				btnSave = driver.findElement(By.xpath("//*[@name='SaveEdit']"));
+				wait.until(ExpectedConditions.visibilityOf(btnSave));
+				actions.moveToElement(btnSave).click().build().perform();
+			}
 
-				// Verifying the Success Toaster Message
-				if (driver.findElement(By.xpath("//*[@data-aura-class='forceActionsText']")).getText().trim().contains("saved")) {
-					System.out.println("Account is saved successful");
-				}
+			// Verifying the Success Toaster Message
+			if (driver.findElement(By.xpath("//*[@data-aura-class='forceActionsText']")).getText().trim()
+					.contains("saved")) {
+				System.out.println("Account is saved successful");
+			}
 
 //Verifying the phone number in the Grid
 
-				// Checking for the added element in the table
+			// Checking for the added element in the table
 
-				List<WebElement> rowAddedAccounts = driver
-						.findElements(By.xpath("//*[@data-aura-class='uiVirtualDataTable']//tbody//tr"));
-
-				// Validating the added Account in the row
-				wait.until(ExpectedConditions.visibilityOfAllElements(rowAddedAccounts));
-				for (int x = 0; x <= (rowAddedAccounts.size()) - 1; x++) {
-					if (rowAddedAccounts.get(x).getText().trim().equals(AccountName)) {
-
-						WebElement row = driver.findElement(
-								By.xpath("//*[@data-aura-class='uiVirtualDataTable']//tbody//tr[" + x + "]"));
-						List<WebElement> colAccounts = driver
-								.findElements(By.xpath("(//*[@data-aura-class='uiVirtualDataTable']//thead//tr//th"));
-						for (int j = 0; j <= (colAccounts.size()) - 1; j++) {
-							String ColName = colAccounts.get(j).getText().trim();
-							if (ColName.equals("Phone")) {
-								String ActualPhoneNo = driver
-										.findElement(By.xpath("//*[@data-aura-class='uiVirtualDataTable']//tbody//tr["
-												+ x + "]//td[" + j + "]"))
-										.getText().trim();
-								if (ActualPhoneNo.equals(PhoneNo)) {
-									System.out.println("Added Phone Number is verified");
-								} else {
-									System.out.println("Verification of Phone Number is failed");
-								}
-							}
-						}
-					}
-				}
-				driver.close();
+			WebElement gridPhoneNoValue = driver.findElement(By.xpath("//*[contains(@class,'forceOutputPhone')]"));
+			if (gridPhoneNoValue.getText().trim().equals(PhoneNo)) {
+				System.out.println("Phone Number is verified Successfully");
 			}
-		}
-	}
 
+		}
+
+		driver.close();
+	}
+}
