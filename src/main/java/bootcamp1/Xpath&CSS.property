@@ -1,0 +1,49 @@
+Url = "https://www.saucedemo.com/"
+
+Page: Login
+=====================================================================================
+Username :
+  XPATH = "//*[@id='user-name']"
+  CSS   = "input#user-name"
+Password
+   XPATH = "//*[@id='password']"
+   CSS   = "input#password" 
+Login Button
+   XPATH = "//*[@id='login-button']"  
+   CSS   = "input[name = 'login-button']"  
+   
+======================================================================================
+
+Products Page
+
+Add to Card Button :
+XPATH = "//*[@id='add-to-cart-sauce-labs-backpack']"
+CSS   = "button[name='add-to-cart-sauce-labs-backpack']"
+
+Shopping Cart Link:
+XPATH = "//*[@class='shopping_cart_link']"
+CSS = ".shopping_cart_link"
+
+=====================================================================================
+
+Checkout Page
+
+Product Added to the Cart:
+
+XPATH ="//*[text()='Sauce Labs Backpack']"
+CSS = ".inventory_item_name"
+
+Checkout Button:
+
+XPATH = "//*[@id='checkout']"
+CSS   = "button#checkout"
+
+=====================================================================================
+
+
+
+   
+   
+   
+
+ 
