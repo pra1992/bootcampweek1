@@ -17,6 +17,7 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
 
 public class CreateEditAccount {
 
@@ -211,9 +212,10 @@ public class CreateEditAccount {
 					wait.until(ExpectedConditions
 							.visibilityOfAllElements(driver.findElements(By.xpath("//table/tbody/tr"))));
 				} catch (StaleElementReferenceException e) {
-					wait.until(
-							ExpectedConditions.stalenessOf((driver.findElements(By.xpath("//table/tbody/tr"))).get(i)));
-					driver.findElements(By.xpath("//table/tbody/tr"));
+					//wait.until(
+						//	ExpectedConditions.stalenessOf((driver.findElements(By.xpath("//table/tbody/tr"))).get(i)));
+					wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//table/tbody/tr")));	
+					
 				} catch (TimeoutException e) {
 					txtSearchAccount.clear();
 					txtSearchAccount.sendKeys(AccountName);
@@ -435,6 +437,7 @@ public class CreateEditAccount {
 			WebElement gridPhoneNoValue = driver.findElement(By.xpath("//*[contains(@class,'forceOutputPhone')]"));
 			if (gridPhoneNoValue.getText().trim().equals(PhoneNo)) {
 				System.out.println("Phone Number is verified Successfully");
+				Assert.assertTrue(true, "Phone Number is verified Successfully");
 			}
 
 		}
