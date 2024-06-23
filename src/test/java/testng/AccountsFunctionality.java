@@ -20,12 +20,10 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class AccountsFunctionality extends BaseClass {
-	Utilities u = new Utilities();
 
-	@Test
-	public void CreateAccount() {
+	@Test(retryAnalyzer = RetryAnalyzer.class, dataProvider = "getdata1")
+	public void CreateAccount(String AccountName) {
 
-		
 		// Capturing the web elements of HomePage
 		// Toggle Button
 		WebElement btnToggle = driver.findElement(By.xpath("//*[@class='slds-icon-waffle']"));
@@ -36,27 +34,16 @@ public class AccountsFunctionality extends BaseClass {
 		// Clicking the View All Button
 		u.clickElementUsingJavascript(btnViewAll, "View All Button");
 		// Switching to the App Launcher Window
-		Set<String> OpenedWindows = driver.getWindowHandles();
-		for (String OpenWindow : OpenedWindows) {
-			if (!OpenWindow.equals(WindowHandle)) {
-				driver.switchTo().window(OpenWindow);
-			}
-		}
+		u.checkWindowHandles(OpenedWindows);
 		// Identifying the Sales Locator and clicking on Sales
 		WebElement btnSales = driver.findElement(By.xpath(
 				"//*[@data-name='Sales']//*[contains(text(),'Manage your sales process with accounts, leads, opportunities, and more')]"));
 		u.clickElementUsingActions(btnSales, "Sales Button");
 
-		wait.until(ExpectedConditions.titleContains("Home | Salesforce"));
+		w.waitforTitle("Home | Salesforce");
 
 		// Checking for the Window Handles
-
-		Set<String> NewOpenedWindows = driver.getWindowHandles();
-		for (String OpenWindow : NewOpenedWindows) {
-			if (!OpenWindow.equals(WindowHandle)) {
-				driver.switchTo().window(OpenWindow);
-			}
-		}
+		u.checkWindowHandles(OpenedWindows);
 
 		// Navigating through the sales option and clicking on Accounts
 		List<WebElement> tabOptions = driver
@@ -77,24 +64,19 @@ public class AccountsFunctionality extends BaseClass {
 		// Waiting for the New Account window to be opened
 
 		WebElement titleNewAccount = driver.findElement(By.xpath("//h2[contains(text(),'New Account')]"));
-		wait.until(ExpectedConditions.visibilityOf(titleNewAccount));
+		w.waitforVisibilityofElement(titleNewAccount, "New Account Window");
 
 		// Checking for the Window Handles
 
-		Set<String> CurrentOpenedWindows = driver.getWindowHandles();
-		for (String OpenWindow : CurrentOpenedWindows) {
-			if (!OpenWindow.equals(WindowHandle)) {
-				driver.switchTo().window(OpenWindow);
-			}
-		}
+		u.checkWindowHandles(OpenedWindows);
 
 		// Identifying and entering the value in Account Name
 
 		WebElement txtAccountName = driver.findElement(By.xpath("//*[@field-label='Account Name']//input"));
 
-		wait.until(ExpectedConditions.visibilityOf(txtAccountName));
+		w.waitforVisibilityofElement(txtAccountName, "Account Name Text Box");
 		u.moveToElement(txtAccountName, "Account Name Text Box");
-		u.enterValueInTextbox(txtAccountName, "Account Name Text Box");
+		u.enterValueInTextbox(txtAccountName, AccountName);
 
 		// Identifying and Entering the value in Ownership
 		WebElement ddOwnership = driver.findElement(By.xpath("//button[contains(@aria-label,'Ownership')]"));
@@ -125,19 +107,14 @@ public class AccountsFunctionality extends BaseClass {
 
 		// Checking for the Window Handles
 
-		Set<String> Windows = driver.getWindowHandles();
-		for (String OpenWindow : Windows) {
-			if (!OpenWindow.equals(WindowHandle)) {
-				driver.switchTo().window(OpenWindow);
-			}
-		}
+		u.checkWindowHandles(OpenedWindows);
 		// Navigating through the sales option and clicking on Accounts
 		List<WebElement> tabOption = driver
 				.findElements(By.xpath("//*[@role='navigation']//*[@role='list']//one-app-nav-bar-item-root//a"));
 		for (int i = 0; i <= (tabOption.size()) - 1; i++) {
 			String TabName = tabOption.get(i).getAttribute("title").trim();
 			if (TabName.equals("Accounts")) {
-				u.clickElementUsingJavascript( tabOption.get(i), "Select Tab Name as Accounts");
+				u.clickElementUsingJavascript(tabOption.get(i), "Select Tab Name as Accounts");
 				break;
 			}
 		}
@@ -155,13 +132,14 @@ public class AccountsFunctionality extends BaseClass {
 
 		for (int i = 0; i <= (driver.findElements(By.xpath("//table/tbody/tr"))).size() - 1; i++) {
 			try {
-				wait.until(
-						ExpectedConditions.visibilityOfAllElements(driver.findElements(By.xpath("//table/tbody/tr"))));
+				w.waitforVisibilityofAllElements(driver.findElements(By.xpath("//table/tbody/tr")),
+						"Newly added Account in the row");
 				if ((driver.findElements(By.xpath("//table/tbody/tr"))).get(i).getText().trim().contains(AccountName)) {
 					Assert.assertTrue(true, "Account Name is verified in the Table");
 				}
 			} catch (StaleElementReferenceException e) {
-				wait.until(ExpectedConditions.stalenessOf((driver.findElements(By.xpath("//table/tbody/tr"))).get(i)));
+				w.waitforStalenessofElement(driver.findElements(By.xpath("//table/tbody/tr")).get(i),
+						"Newly added Account in the ro");
 				driver.findElements(By.xpath("//table/tbody/tr"));
 				if ((driver.findElements(By.xpath("//table/tbody/tr"))).get(i).getText().trim().contains(AccountName)) {
 					Assert.assertTrue(true, "Account Name is verified in the Table");
@@ -170,8 +148,7 @@ public class AccountsFunctionality extends BaseClass {
 				txtSearchAccount.clear();
 				txtSearchAccount.sendKeys(AccountName);
 				txtSearchAccount.sendKeys(Keys.ENTER);
-				wait.until(
-						ExpectedConditions.visibilityOfAllElements(driver.findElements(By.xpath("//table/tbody/tr"))));
+				w.waitforVisibilityofAllElements(driver.findElements(By.xpath("//table/tbody/tr")), "Account Table");
 				if ((driver.findElements(By.xpath("//table/tbody/tr"))).get(i).getText().trim().contains(AccountName)) {
 					Assert.assertTrue(true, "Account Name is verified in the Table");
 				}
@@ -182,9 +159,11 @@ public class AccountsFunctionality extends BaseClass {
 	}
 
 //=============================Edit Account====================================//
-	@Test
-	public void EditAccount() {
-			// Capturing the web elements of HomePage
+	@Test(retryAnalyzer = RetryAnalyzer.class, dataProvider = "getData2")
+	public void EditAccount(String BillingAddress1, String BillingAddress2, String BillingAddress3,
+			String BillingAddress4, String ShippingAddress1, String ShippingAddress2, String ShippingAddress3,
+			String ShippingAddress4) {
+		// Capturing the web elements of HomePage
 		// Toggle Button
 		WebElement btnToggle = driver.findElement(By.xpath("//*[@class='slds-icon-waffle']"));
 		// Clicking the Toggle Button in Home Page
@@ -194,27 +173,16 @@ public class AccountsFunctionality extends BaseClass {
 		// Clicking the View All Button
 		u.clickElementUsingJavascript(btnViewAll, "View All Button");
 		// Switching to the App Launcher Window
-		Set<String> OpenedWindows = driver.getWindowHandles();
-		for (String OpenWindow : OpenedWindows) {
-			if (!OpenWindow.equals(WindowHandle)) {
-				driver.switchTo().window(OpenWindow);
-			}
-		}
+		u.checkWindowHandles(OpenedWindows);
 		// Identifying the Sales Locator and clicking on Sales
 		WebElement btnSales = driver.findElement(By.xpath(
 				"//*[@data-name='Sales']//*[contains(text(),'Manage your sales process with accounts, leads, opportunities, and more')]"));
 		u.clickElementUsingActions(btnSales, "Sales Button");
-
-		wait.until(ExpectedConditions.titleContains("Home | Salesforce"));
+		w.waitforTitle("Home | Salesforce");
 
 		// Checking for the Window Handles
 
-		Set<String> NewOpenedWindows = driver.getWindowHandles();
-		for (String OpenWindow : NewOpenedWindows) {
-			if (!OpenWindow.equals(WindowHandle)) {
-				driver.switchTo().window(OpenWindow);
-			}
-		}
+		u.checkWindowHandles(OpenedWindows);
 
 		// Navigating through the sales option and clicking on Accounts
 		List<WebElement> tabOptions = driver
@@ -233,13 +201,12 @@ public class AccountsFunctionality extends BaseClass {
 		txtSearchAccount.sendKeys(Keys.ENTER);
 		for (int i = 0; i <= (driver.findElements(By.xpath("//table/tbody/tr"))).size() - 1; i++) {
 			try {
-				wait.until(
-						ExpectedConditions.visibilityOfAllElements(driver.findElements(By.xpath("//table/tbody/tr"))));
+				w.waitforVisibilityofAllElements(driver.findElements(By.xpath("//table/tbody/tr")), "Accounts Table");
 			} catch (StaleElementReferenceException e) {
 //				wait.until(ExpectedConditions.stalenessOf((driver.findElements(By.xpath("//table/tbody/tr"))).get(i)));
 //				driver.findElements(By.xpath("//table/tbody/tr"));
 //				wait.until(ExpectedConditions.visibilityOf((driver.findElements(By.xpath("//table/tbody/tr"))).get(i)));
-				wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//table/tbody/tr")));
+				w.waitforPresenceofElement("//table/tbody/tr", "Accounts Table");
 
 			} catch (org.openqa.selenium.TimeoutException e) {
 				txtSearchAccount.clear();
@@ -283,7 +250,8 @@ public class AccountsFunctionality extends BaseClass {
 				String AccountTypeOption = optionsAccountType.get(i).getText().trim();
 
 				if (AccountTypeOption.equals("Technology Partner")) {
-					u.clickElementUsingJavascript(optionsAccountType.get(i), "Select Account Type as Technology Partner");
+					u.clickElementUsingJavascript(optionsAccountType.get(i),
+							"Select Account Type as Technology Partner");
 					break;
 				}
 
@@ -320,10 +288,10 @@ public class AccountsFunctionality extends BaseClass {
 		WebElement txtBillingCountry = driver
 				.findElement(By.xpath("//*[text()='Billing Address']/..//*[@name='province']"));
 
-		u.enterValueInTextbox(txtBillingStreet, "Chennai1");
-		u.enterValueInTextbox(txtBillingCity, "Chennai2");
-		u.enterValueInTextbox(txtBillingZipCode, "Chennai3");
-		u.enterValueInTextbox(txtBillingCountry, "Chennai4");
+		u.enterValueInTextbox(txtBillingStreet, BillingAddress1);
+		u.enterValueInTextbox(txtBillingCity, BillingAddress2);
+		u.enterValueInTextbox(txtBillingZipCode, BillingAddress3);
+		u.enterValueInTextbox(txtBillingCountry, BillingAddress4);
 
 		// Identifying and Filling the Shipping Address
 
@@ -336,12 +304,11 @@ public class AccountsFunctionality extends BaseClass {
 				.findElement(By.xpath("//*[text()='Shipping Address']/..//*[@name='province']"));
 		WebElement txtShippingCountry = driver
 				.findElement(By.xpath("//*[text()='Shipping Address']/..//*[@name='province']"));
-		
-		u.enterValueInTextbox(txtShippingStreet, "Chennai1");
-		u.enterValueInTextbox(txtShippingCity, "Chennai2");
-		u.enterValueInTextbox(txtShippingZipCode, "Chennai3");
-		u.enterValueInTextbox(txtShippingCountry, "Chennai4");
 
+		u.enterValueInTextbox(txtShippingStreet, ShippingAddress1);
+		u.enterValueInTextbox(txtShippingCity, ShippingAddress2);
+		u.enterValueInTextbox(txtShippingZipCode, ShippingAddress3);
+		u.enterValueInTextbox(txtShippingCountry, ShippingAddress4);
 
 		// Selecting the Customer Priority as Low
 
@@ -422,12 +389,14 @@ public class AccountsFunctionality extends BaseClass {
 		}
 		// Clicking on Save Button
 		WebElement btnSave = driver.findElement(By.xpath("//*[@name='SaveEdit']"));
-		try {	
+		try {
 			u.clickElementUsingActions(btnSave, "Save Button");
 		} catch (org.openqa.selenium.StaleElementReferenceException e) {
-			wait.until(ExpectedConditions.stalenessOf(btnSave));
+
+			w.waitforStalenessofElement(btnSave, "Save Account Button");
+			w.waitforVisibilityofElement(btnSave, "Save Account Button");
 			btnSave = driver.findElement(By.xpath("//*[@name='SaveEdit']"));
-			wait.until(ExpectedConditions.visibilityOf(btnSave));
+			w.waitforVisibilityofElement(btnSave, "Save Account Button");
 			u.clickElementUsingActions(btnSave, "Save Button");
 		}
 
@@ -435,6 +404,7 @@ public class AccountsFunctionality extends BaseClass {
 		if (driver.findElement(By.xpath("//*[@data-aura-class='forceActionsText']")).getText().trim()
 				.contains("saved")) {
 			System.out.println("Account is saved successful");
+			a.assertTrue(true, "Account is saved successful");
 		}
 
 //Verifying the phone number in the Grid
@@ -446,6 +416,6 @@ public class AccountsFunctionality extends BaseClass {
 			System.out.println("Phone Number is verified Successfully");
 			Assert.assertTrue(true, "Phone Number is verified Successfully");
 		}
-		
+
 	}
 }
