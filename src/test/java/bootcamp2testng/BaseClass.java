@@ -1,4 +1,4 @@
-package testng;
+package bootcamp2testng;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,19 +27,19 @@ import org.testng.asserts.SoftAssert;
 
 public class BaseClass {
 
-	public static WebDriver driver;
+	public  WebDriver driver;
 	Actions actions;
 	WebDriverWait wait;
-	String WindowHandle = null;
-	Set<String> OpenedWindows = null;
 	// Declaring Java Script Executor
 	JavascriptExecutor js = (JavascriptExecutor) driver;
 	String AccountName = "Prasanth Sankaran";
 	String PhoneNo = "75023687";
-	SoftAssert a = new SoftAssert();
-	Utilities u = new Utilities();
-	WaitUtils w = new WaitUtils();
 	String Folder = System.getProperty("user.dir") + "/Images";
+	public WaitUtils w;
+	public Utilities u;
+	public Assertion softAssert;
+	String WindowHandle = null;
+	Set<String> OpenedWindows = null;
 
 	@Parameters({ "url", "username", "password" })
 	@BeforeMethod
@@ -57,13 +57,11 @@ public class BaseClass {
 		// maximizing the window and setting up implicit wait
 		driver.manage().window().maximize();
 		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20));
-		// Window Handle
-
-		WindowHandle = driver.getWindowHandle();
-		OpenedWindows = driver.getWindowHandles();
 		// Declaring Actions Instance
 		actions = new Actions(driver);
-
+		w = new WaitUtils(driver);
+        u = new Utilities(driver);
+        
 		// Locating all the elements in the login page
 
 		WebElement txtUserName = driver.findElement(By.xpath("//*[@id='username']"));
@@ -72,8 +70,6 @@ public class BaseClass {
 
 		WebElement btnLogin = driver.findElement(By.xpath("//*[@id='Login']"));
 
-		// **********************Test Case1 Create
-		// Account*****************************************//
 		// Entering the UserName, Password and click on Login Button
 		txtUserName.sendKeys(username);
 		txtPassword.sendKeys(password);
@@ -97,7 +93,8 @@ public class BaseClass {
 	@DataProvider(name = "getdata2")
 	public Object[][] fetchDataForEditAccount() {
 		return new Object[][] {
-				{ "Chennai1", "Chennai2", "Chennai3", "Chennai4", "Blore1", "Blore2", "Blore3", "Blore4" } };
+				{ "Chennai1", "Chennai2", "Chennai3", "Chennai4", "Blore1", "Blore2", "Blore3", "Blore4" } 
+				};
 	}
 
 	@AfterMethod
@@ -108,7 +105,7 @@ public class BaseClass {
 			File source = ss.getScreenshotAs(OutputType.FILE);
 			FileUtils.copyFile(source, new File(Folder));
 		}
-		a.assertAll();
+		Assertion.doAssertAll();
 		driver.close();
 	}
 

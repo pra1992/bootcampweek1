@@ -1,31 +1,40 @@
-package testng;
+package bootcamp2testng;
 
+import java.time.Duration;
 import java.util.Set;
 
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.asserts.SoftAssert;
 
 public class Utilities extends BaseClass {
 
 	Actions actions;
 
 	JavascriptExecutor js;
-
-	WebDriverWait wait;
+ 
+    WebDriver driver;
+    Assertion softAssert;
+    public Utilities(WebDriver driver) {
+		System.out.println(driver);
+	    this.driver = driver;
+		softAssert = new Assertion();
+	}
 
 	// Enter the value in the textBox
 
 	public void enterValueInTextbox(WebElement textbox, String string) {
 		try {
 			textbox.isDisplayed();
-			a.assertTrue(true, "Able to verify the Textbox");
+			Assertion.assertTrue(true, textbox, "Able to verify the message");
 			textbox.sendKeys(string);
 		} catch (org.openqa.selenium.NoSuchElementException e) {
-			a.fail("Text Box Element is not identified due to " + e);
+			Assertion.assertFail(false, e, "Text Box Element is not identified");
 		} catch (Exception e) {
-			a.fail("Unable to enter text due to " + e);
+			Assertion.assertFail(false, e, "Unable to enter text");
 		}
 
 	}
@@ -35,12 +44,12 @@ public class Utilities extends BaseClass {
 	public void verifyandclickOnElement(WebElement webelement, String element) {
 		try {
 			webelement.isDisplayed();
-			a.assertTrue(true, "Able to verify the " + element);
+			Assertion.assertTrue(true, webelement, "Able to verify");
 			webelement.click();
 		} catch (org.openqa.selenium.NoSuchElementException e) {
-			a.fail(element + "is not identified due to " + e);
+			Assertion.assertFail(false, e, "Not Identified");
 		} catch (Exception e) {
-			a.fail("Unable to click" + element + " due to " + e);
+		  Assertion.assertFail(false, e, "Not Identified");
 		}
 
 	}
@@ -50,12 +59,12 @@ public class Utilities extends BaseClass {
 
 		try {
 			webelement.isDisplayed();
-			a.assertTrue(true, "Able to verify the " + element);
+			Assertion.assertTrue(true, webelement, "Able to verify");
 			actions.moveToElement(webelement).build().perform();
 		} catch (org.openqa.selenium.NoSuchElementException e) {
-			a.fail(element + "is not identified due to " + e);
+			Assertion.assertFail(false, e, "Not Identified");
 		} catch (Exception e) {
-			a.fail("Unable to scroll to " + element + " due to " + e);
+			Assertion.assertFail(false, e, "Not Identified");
 		}
 
 	}
@@ -65,12 +74,12 @@ public class Utilities extends BaseClass {
 
 		try {
 			webelement.isDisplayed();
-			a.assertTrue(true, "Able to verify the " + element);
+			Assertion.assertTrue(true, webelement, "Able to verify");
 			js.executeScript("arguments[0].click();", webelement);
 		} catch (org.openqa.selenium.NoSuchElementException e) {
-			a.fail(element + "is not identified due to " + e);
+			Assertion.assertFail(false, e, "Not Identified");
 		} catch (Exception e) {
-			a.fail("Unable to click through JavaScript " + element + " due to " + e);
+			Assertion.assertFail(false, e, "Not Identified");
 		}
 
 	}
@@ -80,18 +89,19 @@ public class Utilities extends BaseClass {
 
 		try {
 			webelement.isDisplayed();
-			a.assertTrue(true, "Able to verify the " + element);
+			Assertion.assertTrue(true, webelement, "Able to verify");
 			actions.moveToElement(webelement).click().build().perform();
 		} catch (org.openqa.selenium.NoSuchElementException e) {
-			a.fail(element + "is not identified due to " + e);
+			Assertion.assertFail(false, e, "Not Identified");
 		} catch (Exception e) {
-			a.fail("Unable to click through Actions " + element + " due to " + e);
+			Assertion.assertFail(false, e, "Not Identified");
 		}
 
 	}
 
 // Checking for Window Handles
 	public void checkWindowHandles(Set<String> windows) {
+		WindowHandle = driver.getWindowHandle();
 		windows = driver.getWindowHandles();
 		for (String OpenWindow : windows) {
 			if (!OpenWindow.equals(WindowHandle)) {

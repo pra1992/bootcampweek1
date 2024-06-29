@@ -1,4 +1,4 @@
-package testng;
+package bootcamp2testng;
 
 import org.testng.IRetryAnalyzer;
 import org.testng.ITestResult;
@@ -16,5 +16,7 @@ public class RetryAnalyzer implements IRetryAnalyzer {
 		}
 		return false;
 	}
+	
+	
 
 }
