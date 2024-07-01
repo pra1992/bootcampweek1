@@ -14,10 +14,21 @@ public class Assertion {
   }  
   }
   
+  public static void assertTrue(boolean value, String message ) {
+	  if(value==true) {
+		  a.assertTrue(value, message );
+  }  
+  }
+  
   public static void assertFail( boolean value,Exception e, String message) {
 	  if(value == false) {
 		  a.fail(message + e);
 	  }
+  }
+  
+  public static void assertFail( String message) {
+	 
+		  a.fail(message);
   }
   
   public static void assertSuccessMessage(boolean value, String Message) {

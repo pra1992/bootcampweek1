@@ -21,14 +21,16 @@ import org.testng.annotations.Test;
 
 public class CreateAccount extends BaseClass {
 	
-	@Test(retryAnalyzer = RetryAnalyzer.class, dataProvider = "getdata1")
-	public void addAccount(String AccountName) {
+	@Test(dataProvider = "getdata1")
+	public void addAccount(String AccountName, String AccountType) {
 
 		// Capturing the web elements of HomePage
 		// Toggle Button
-		WebElement btnToggle = driver.findElement(By.xpath("//*[@class='slds-icon-waffle']"));
+		WebElement btnToggle = driver.findElement(By.xpath("//*[@title='App Launcher']"));
 		// Clicking the Toggle Button in Home Page
-		u.clickElementUsingActions(btnToggle, "Toggle BUtton");
+		w.waitforVisibilityofElement(btnToggle, "Toggle Button");
+		u.moveToElement(btnToggle, "Toggle Button");
+		u.clickElementUsingJavascript(btnToggle, "Toggle Button");
 		// ViewAll Button
 		WebElement btnViewAll = driver.findElement(By.xpath("//*[@kx-type='underline']"));
 		// Clicking the View All Button
@@ -38,7 +40,7 @@ public class CreateAccount extends BaseClass {
 		// Identifying the Sales Locator and clicking on Sales
 		WebElement btnSales = driver.findElement(By.xpath(
 				"//*[@data-name='Sales']//*[contains(text(),'Manage your sales process with accounts, leads, opportunities, and more')]"));
-		u.clickElementUsingActions(btnSales, "Sales Button");
+		0.
 
 		w.waitforTitle("Home | Salesforce");
 

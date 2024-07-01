@@ -1,0 +1,1 @@
+{"uuid":"8df15c17-ed79-49df-aade-44cfdc8508d3","name":"bootcamp2testng.BaseClass.setUp","children":["c5807791-6d08-4437-9661-d188d8d2c354"],"description":"","befores":[{"name":"setUp","status":"passed","stage":"finished","description":"","steps":[],"attachments":[],"parameters":[],"start":1719745341603,"stop":1719745359374}],"afters":[],"start":1719745341602,"stop":1719745359375}

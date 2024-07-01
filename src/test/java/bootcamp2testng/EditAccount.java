@@ -23,10 +23,10 @@ public class EditAccount extends BaseClass {
 	
 
 //=============================Edit Account====================================//
-	@Test(dataProvider = "getData2")
-	public void updateAccount(String BillingAddress1, String BillingAddress2, String BillingAddress3,
+	@Test(dataProvider = "getdata2")
+	public void updateAccount(String PhoneNo, String AccountType, String Industry, String BillingAddress1, String BillingAddress2, String BillingAddress3,
 			String BillingAddress4, String ShippingAddress1, String ShippingAddress2, String ShippingAddress3,
-			String ShippingAddress4) {
+			String ShippingAddress4, String Active) {
 		// Capturing the web elements of HomePage
 		// Toggle Button
 		WebElement btnToggle = driver.findElement(By.xpath("//*[@class='slds-icon-waffle']"));
@@ -79,21 +79,28 @@ public class EditAccount extends BaseClass {
 			}
 
 		}
-
+		WebElement ddActionDropdown = driver.findElement(By.xpath("//*[@data-aura-class='forceVirtualAction']//a"));
 		try {
-			js.executeScript("arguments[0].click()",
-					driver.findElement(By.xpath("(//*[@data-aura-class='forceVirtualAction']//a)")));
+		
+			w.waitforVisibilityofElement(ddActionDropdown, Active);
+		    u.moveToElement(ddActionDropdown, Active);
+			u.clickElementUsingJavascript(ddActionDropdown, Active);
 		} catch (org.openqa.selenium.NoSuchElementException e) {
 			txtSearchAccount.clear();
 			txtSearchAccount.sendKeys(AccountName);
 			txtSearchAccount.sendKeys(Keys.ENTER);
+			w.waitforVisibilityofElement(ddActionDropdown, Active);
+		    u.moveToElement(ddActionDropdown, Active);
+			u.clickElementUsingJavascript(ddActionDropdown, Active);
 		}
 
 		WebElement btnEdit = driver.findElement(By.xpath("//a[@title='Edit']"));
 		u.clickElementUsingJavascript(btnEdit, "Edit Account");
 
 		// *********Editing the Account fields*********
-
+      WebElement popUpEditAccount = driver.findElement(By.cssSelector("div[data-aura-class = 'oneRecordActionWrapper']"));
+      
+      w.waitforVisibilityofElement(popUpEditAccount, "Edit Account Modal");
 		// Enter Unique Number in Phone Field
 
 		WebElement txtPhoneNo = driver.findElement(By.xpath("//*[@field-label='Phone']//input"));
@@ -102,7 +109,7 @@ public class EditAccount extends BaseClass {
 		// Identifying and selecting the Account Type
 
 		WebElement ddAccountType = driver.findElement(By.xpath("//button[contains(@aria-label,'Type')]"));
-		u.clickElementUsingJavascript(ddAccountType, "Select Account Type");
+		u.clickElementUsingJavascript(ddAccountType, AccountType);
 
 		// Selecting the options in the Account Type
 
@@ -113,7 +120,7 @@ public class EditAccount extends BaseClass {
 			try {
 				String AccountTypeOption = optionsAccountType.get(i).getText().trim();
 
-				if (AccountTypeOption.equals("Technology Partner")) {
+				if (AccountTypeOption.equals(AccountType)) {
 					u.clickElementUsingJavascript(optionsAccountType.get(i),
 							"Select Account Type as Technology Partner");
 					break;
@@ -126,21 +133,22 @@ public class EditAccount extends BaseClass {
 
 		// Selecting the Industry as Health Care
 		WebElement ddIndustry = driver.findElement(By.xpath("//*[contains(@aria-label,'Industry')]"));
-		u.clickElementUsingJavascript(ddIndustry, "Select Industry");
+		u.clickElementUsingJavascript(ddIndustry, Industry);
 
 		List<WebElement> optionsIndustry = driver
 				.findElements(By.xpath("//label[text()='Industry']/..//*[@class='slds-truncate']"));
 
 		for (int j = 0; j <= (optionsIndustry.size()) - 1; j++) {
 			String IndustryTypeOption = optionsIndustry.get(j).getText().trim();
-			if (IndustryTypeOption.contains("Healthcare")) {
+			if (IndustryTypeOption.contains(Industry)) {
 				u.clickElementUsingJavascript(optionsIndustry.get(j), "Select Industry Option as Health Care");
 				break;
 			}
 		}
 
 		// Identifying and filling the Billing Address
-		js.executeScript("document.querySelector('.actionBody').scrollBy(0,750)");
+//		js.executeScript("document.querySelector('.actionBody').scrollBy(0,750)");
+		u.scrollVertically(popUpEditAccount, 750);
 
 		WebElement txtBillingStreet = driver
 				.findElement(By.xpath("//*[text()='Billing Address']/..//textarea[@autocomplete='street-address']"));
@@ -191,8 +199,8 @@ public class EditAccount extends BaseClass {
 		}
 
 		// Select SLA as Silver
-		js.executeScript("document.querySelector('.actionBody').scrollBy(0,200)");
-
+//		js.executeScript("document.querySelector('.actionBody').scrollBy(0,200)");
+		u.scrollVertically(popUpEditAccount, 200);
 		WebElement ddSLA = driver.findElement(By.xpath("//*[contains(@aria-label,'SLA')]"));
 		u.clickElementUsingJavascript(ddSLA, "Select SLA");
 
@@ -210,8 +218,7 @@ public class EditAccount extends BaseClass {
 		// 14) Select Active as NO
 
 		// Scrolling
-
-		js.executeScript("document.querySelector('.actionBody').scrollBy(0,100)");
+		u.scrollVertically(popUpEditAccount, 100);
 
 		WebElement ddActive = driver.findElement(By.xpath("//*[contains(@aria-label,'Active')]"));
 		u.clickElementUsingJavascript(ddActive, "Select Active");
@@ -222,7 +229,7 @@ public class EditAccount extends BaseClass {
 		for (int j = 0; j <= (optionsActive.size()) - 1; j++) {
 			try {
 				String ActiveOption = optionsActive.get(j).getText().trim();
-				if (ActiveOption.equals("No")) {
+				if (ActiveOption.equals(Active)) {
 					u.clickElementUsingJavascript(optionsActive.get(j), "Select An Active Option");
 					break;
 				}
@@ -271,7 +278,7 @@ public class EditAccount extends BaseClass {
 			Assertion.assertSuccessMessage(true, "Account is saved successful");
 		}
 
-//Verifying the phone number in the Grid
+//Verifying	 the phone number in the Grid
 
 		// Checking for the added element in the table
 

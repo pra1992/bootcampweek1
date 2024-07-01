@@ -3,6 +3,8 @@ package bootcamp2testng;
 import java.io.File;
 import java.io.IOException;
 import java.time.Duration;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
@@ -31,7 +33,7 @@ public class BaseClass {
 	Actions actions;
 	WebDriverWait wait;
 	// Declaring Java Script Executor
-	JavascriptExecutor js = (JavascriptExecutor) driver;
+	JavascriptExecutor js;
 	String AccountName = "Prasanth Sankaran";
 	String PhoneNo = "75023687";
 	String Folder = System.getProperty("user.dir") + "/Images";
@@ -39,15 +41,25 @@ public class BaseClass {
 	public Utilities u;
 	public Assertion softAssert;
 	String WindowHandle = null;
-	Set<String> OpenedWindows = null;
+	public Set<String> OpenedWindows = null;
 
 	@Parameters({ "url", "username", "password" })
 	@BeforeMethod
 	public void setUp(String url, String username, String password) {
 
 		// ****Creation of WebDriver Object****//
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("profile.default_content_settings.popups", 0);
+		map.put("download.default_directory", System.getProperty("user.dir"));
 		ChromeOptions options = new ChromeOptions();
+		options.setExperimentalOption("prefs", map);
 		options.addArguments("--disable-notifications");
+		
+		//Setting the default download directory
+		
+		
+		
 
 		driver = new ChromeDriver(options);
 		// Deleting the Cookies
@@ -58,9 +70,11 @@ public class BaseClass {
 		driver.manage().window().maximize();
 		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20));
 		// Declaring Actions Instance
-		actions = new Actions(driver);
+
 		w = new WaitUtils(driver);
         u = new Utilities(driver);
+        
+        
         
 		// Locating all the elements in the login page
 
@@ -86,15 +100,17 @@ public class BaseClass {
 	}
 
 	@DataProvider(name = "getdata1")
-	public Object[][] fetchDataForCreateAccount() {
-		return new Object[][] { { AccountName } };
+	public Object[][] fetchDataForCreateAccount() throws IOException {
+		return ExcelDataReader.readExcelData("CreateAccount");
+//		return new Object[][] { { ExcelDataReader.readExcelData("CreateAccount") } };
 	}
 
 	@DataProvider(name = "getdata2")
-	public Object[][] fetchDataForEditAccount() {
-		return new Object[][] {
-				{ "Chennai1", "Chennai2", "Chennai3", "Chennai4", "Blore1", "Blore2", "Blore3", "Blore4" } 
-				};
+	public Object[][] fetchDataForEditAccount() throws IOException {
+		return ExcelDataReader.readExcelData("EditAccount");
+//		return new Object[][] {
+//				{ ExcelDataReader.readExcelData("EditAccount") } 
+//				};
 	}
 
 	@AfterMethod

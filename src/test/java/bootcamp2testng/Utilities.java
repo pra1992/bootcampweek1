@@ -22,6 +22,8 @@ public class Utilities extends BaseClass {
 		System.out.println(driver);
 	    this.driver = driver;
 		softAssert = new Assertion();
+        actions = new Actions(driver);
+        js = (JavascriptExecutor)driver;
 	}
 
 	// Enter the value in the textBox
@@ -123,5 +125,16 @@ public class Utilities extends BaseClass {
 
 		js.executeScript("arguments[0].scrollBy(arguments[1], 0)", element, ScrollBy);
 	}
-
+// Verify the title of the page
+	
+	public void verifyTitleOfPage(Boolean value, String expected) {
+		try {
+			if(driver.getTitle().contains(expected)) {
+				Assertion.assertTrue(value, expected);
+			}
+		}
+		catch(Exception e) {
+			Assertion.assertFail("Title of page is not loaded due to" + e);
+		}
+	}
 }
