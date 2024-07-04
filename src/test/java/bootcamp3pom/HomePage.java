@@ -20,6 +20,9 @@ public class HomePage extends BaseClass {
 	WebElement btnServiceConsole = driver.findElement(By.xpath(
 			"//*[@data-name='Service Console']//*[contains(text(),'(Lightning Experience) Lets support agents work with multiple records across customer service channels on one screen')]"));
 	
+	WebElement btnSales = driver.findElement(By.xpath(
+			"//*[@data-name='Sales']//*[contains(text(),'Manage your sales process with accounts, leads, opportunities, and more')]"));
+	
 	public void clickToggle() {
 		w.waitforVisibilityofElement(btnToggle, "Toggle Button");
 		u.moveToElement(btnToggle, "Toggle Button");
@@ -31,9 +34,20 @@ public class HomePage extends BaseClass {
 		u.clickElementUsingJavascript(btnViewAll, "View All Button");
 	}
 	
-	//4. Click Service Console from App Launcher
-	public void selectServiceConsole() {
+	//4. Click Option from App Launcher
+	public void selectServiceConsole(String AppLauncherOption) {
 		u.checkWindowHandles(OpenedWindows);
-		u.clickElementUsingActions(btnServiceConsole, "Sales Button");
+		u.clickElementUsingActions(btnServiceConsole, "Servic eConsole Button");
+		switch (AppLauncherOption.toLowerCase()) {	
+		case  "sales":
+			u.clickElementUsingActions(btnSales, "Sales Option");
+		   break;
+		case "service console":
+			u.clickElementUsingActions(btnServiceConsole, "Service Console Option");
+			break;
+		}
+		
 	}
+	
+	
 }

@@ -1,0 +1,34 @@
+Bootcamp Assessment TestCase
+==========================
+1. Login to https://login.salesforce.com
+2. Click on toggle menu button from the left corner
+3. Click view All 
+4. Click Service Console from App Launcher
+5. Select Files from the DropDown
+6. Click on the latest modified item link
+7. Click on Public link
+8. Verify the new link has created
+9. Download the file into a specified folder inside the project
+10. Click on Share 
+11. Click on search Bootcamp Testleaf and select the Bootcamp Testleaf
+12. Verify the Error message "Can't share file with the file owner".
+13. Remove Bootcamp Testleaf and Search "Integration user".
+14. Add a message as "Bootcamp Testleaf_<your name>"
+15. Verify "You shared <item> with <shared user>" message
+16. Click on Upload Files and browse a file from your local 
+17. Click on DropDown for the newly uploaded file and select View File Details
+18. Verify the file name and extension of the newly uploaded file
+19. Close the file window tab
+20. Click on DrowDown for the newly uploaded file and select Delete
+21. Confirm Delete
+22. Verify the success message displayed for the delete
+
+Allure.addAttachment("Failed Screenshot", Files.newInputStream(Paths.get("./images/failed.png")));
+
+HashMap<String, Object> map = new HashMap<String, Object>();
+map.put("profile.default_content_settings.popups", 0);
+map.put("download.default_directory", System.getProperty("user.dir"));
+
+ChromeOptions options = new ChromeOptions();
+options.setExperimentalOptions("prefs", map);
+ChromeDriver driver = new ChromeDriver(options);

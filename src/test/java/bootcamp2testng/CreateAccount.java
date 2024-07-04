@@ -40,7 +40,8 @@ public class CreateAccount extends BaseClass {
 		// Identifying the Sales Locator and clicking on Sales
 		WebElement btnSales = driver.findElement(By.xpath(
 				"//*[@data-name='Sales']//*[contains(text(),'Manage your sales process with accounts, leads, opportunities, and more')]"));
-		0.
+		actions.moveToElement(btnSales).click().build().perform();
+		u.clickElementUsingActions(btnSales, "Sales Button");
 
 		w.waitforTitle("Home | Salesforce");
 

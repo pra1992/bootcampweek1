@@ -1,10 +1,14 @@
 package bootcamp2testng;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
@@ -40,22 +44,36 @@ public class BaseClass {
 	public WaitUtils w;
 	public Utilities u;
 	public Assertion softAssert;
-	String WindowHandle = null;
+	public Properties property;
+	public String WindowHandle = null;
 	public Set<String> OpenedWindows = null;
+    public static String downloadDir= null;
+    public static String ProjectRoot = null;
+
 
 	@Parameters({ "url", "username", "password" })
 	@BeforeMethod
-	public void setUp(String url, String username, String password) {
-
-		// ****Creation of WebDriver Object****//
-		
+	public void setUp(String url, String username, String password) throws IOException, URISyntaxException {
+      
+		//Loading the property file
+		 property = new Properties();
+	        FileInputStream fis = new FileInputStream("src/test/resources/Properties/Config.properties");
+	        property.load(fis);
+	     // ****Creation of WebDriver Object****//
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("profile.default_content_settings.popups", 0);
-		map.put("download.default_directory", System.getProperty("user.dir"));
+	    ProjectRoot = new File(getClass().getProtectionDomain().getCodeSource().getLocation().toURI()).getParent();
+		downloadDir= ProjectRoot + "\\src\\test\\resources\\download";
+		File downloadFolder = new File(downloadDir);
+		if(!downloadFolder.exists()) {
+			downloadFolder.mkdir();
+		}
+	    map.put("download.default_directory", downloadDir);
 		ChromeOptions options = new ChromeOptions();
 		options.setExperimentalOption("prefs", map);
-		options.addArguments("--disable-notifications");
-		
+		options.addArguments("download.default_filename", property.getProperty("FileName") + property.getProperty("FileProperty")); // set the file name
+		options.addArguments("download.prompt_for_download", "false");// disable prompt
+		options.addArguments("download.directory_upgrade", "true"); // enable downloading
 		//Setting the default download directory
 		
 		
@@ -74,8 +92,7 @@ public class BaseClass {
 		w = new WaitUtils(driver);
         u = new Utilities(driver);
         
-        
-        
+       ;
 		// Locating all the elements in the login page
 
 		WebElement txtUserName = driver.findElement(By.xpath("//*[@id='username']"));

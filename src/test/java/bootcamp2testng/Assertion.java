@@ -20,6 +20,12 @@ public class Assertion {
   }  
   }
   
+  public static void assertEquals(boolean actual, boolean expected  ) {
+	  
+		 a.assertEquals(actual, expected);
+    
+  }
+  
   public static void assertFail( boolean value,Exception e, String message) {
 	  if(value == false) {
 		  a.fail(message + e);
@@ -46,6 +52,10 @@ public class Assertion {
 public static void doAssertAll() {
 	 a.assertAll();
 }
+
+
+
+
   
   
   
