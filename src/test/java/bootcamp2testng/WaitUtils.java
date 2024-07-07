@@ -9,6 +9,9 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import bootcamp3pom.pages.Assertion;
+import bootcamp3pom.pages.BaseClass;
+
 public class WaitUtils extends BaseClass {
 	WebDriverWait wait;
 	public WaitUtils(WebDriver driver) {

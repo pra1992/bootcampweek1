@@ -1,4 +1,4 @@
-package bootcamp3pom;
+package bootcamp3pom.pages;
 
 import java.awt.AWTException;
 import java.awt.Robot;
@@ -16,13 +16,10 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 
-import bootcamp2testng.Assertion;
-import bootcamp2testng.BaseClass;
 import bootcamp2testng.Utilities;
 
 public class FilesPage extends BaseClass {
 
-	private WebDriver driver;
 
 	public static String FileName = null;
 
@@ -42,6 +39,8 @@ public class FilesPage extends BaseClass {
 
 	WebElement ddNavigationMenu = driver.findElement(By.xpath("//*[@aria-label = 'Show Navigation Menu']"));
 
+	List<WebElement> optionsSeviceConsole = driver.findElements(By.xpath("//*[@aria-label = 'Show Navigation Menu']/following-sibling::section//li"));
+	
 	WebElement tblHeaderLastModified = driver.findElement(
 			By.xpath("//table[@data-aura-class='uiVirtualDataTable']//thead//th[@title='Last Modified Date']"));
 
@@ -130,13 +129,11 @@ public class FilesPage extends BaseClass {
 	}
 	// Select service console Option
 
-	public void selectServiceConsoleOption(List<WebElement> Options, String Serviceconsole, String Value) {
-		switch (Serviceconsole.toLowerCase()) {
-		case "file":
-			u.clickElementUsingJavascript(ddNavigationMenu, Serviceconsole);
-			u.selectValueFromDropdown(Options, Serviceconsole, Value);
-			break;
-		}
+	public FilesPage selectServiceConsoleOption() {
+	
+			u.clickElementUsingJavascript(ddNavigationMenu, "Service Console Dropdown");
+			u.selectValueFromDropdown(optionsSeviceConsole, "Service Console", "Files");
+		return this;
 	}
 
 	public int identifyRecentDate() {
@@ -167,7 +164,7 @@ public class FilesPage extends BaseClass {
 
 	// Select the recent File and download
 
-	public void downloadRecentFile(String Title) {
+	public FilesPage openRecentFile(String Title) {
 		int value = this.identifyRecentDate();
 		try {
 			for (int i = 0; i <= (colTitle.size()) - 1; i++) {
@@ -186,8 +183,6 @@ public class FilesPage extends BaseClass {
 									"(//*[@class='itemTitle desktop outputTextOverride uiOutputText'])[" + j + "]"))
 									.getText().trim();
 							u.clickElementUsingJavascript(FileLink, "File To be downloaded");
-							w.waitforVisibilityofElement(btnDownload, "Download File");
-							u.clickElementUsingJavascript(btnDownload, "Download Button");
 
 						}
 
@@ -198,11 +193,18 @@ public class FilesPage extends BaseClass {
 		} catch (Exception e) {
 			Assertion.assertFail("Unable to download the file due to " + e);
 		}
+		return this;
+	}
+	
+	public FilesPage downloadFile() {
+		w.waitforVisibilityofElement(btnDownload, "Download File");
+		u.clickElementUsingJavascript(btnDownload, "Download Button");
+		return this;
 	}
 
 	// verify the file is downloaded in the project
 
-	public void verifyFileDownload() {
+	public FilesPage verifyFileDownload() {
 		try {
 			File file = new File(downloadDir, FilesPage.DownloadedFileName);
 			if (file.exists() && file.isFile()) {
@@ -211,6 +213,7 @@ public class FilesPage extends BaseClass {
 		} catch (Exception e) {
 			Assertion.assertFail("File is not downloaded sue to " + e);
 		}
+		return this;
 	}
 
 	public boolean isFileAlreadyUploaded() {
@@ -231,7 +234,7 @@ public class FilesPage extends BaseClass {
 
 	// Upload File
 
-	public void uploadFile() throws AWTException, IOException {
+	public FilesPage uploadFile() throws AWTException, IOException {
 		try {
 			robot = new Robot();
 			int Suffix = 1;
@@ -264,47 +267,60 @@ public class FilesPage extends BaseClass {
 		} catch (Exception e) {
 			Assertion.assertFail("Unable to upload the file due to" + e);
 		}
+		return this;
+	}
+	
+	public FilesPage verifyUploadIsSuccess() {
+		u.verifyElementIsDisplayed(messageSuccessUpload, "Success Toaster Message");
+		return this;
 	}
 
 	// Clicking on Public Link
-	public void clickPublicLink() {
+	public FilesPage clickPublicLink() {
 		try {
-			u.clickElementUsingJavascript(linkPublic, DownloadedFileExtension);
+			w.waitforVisibilityofElement(linkPublic, "Public Link");
+			u.clickElementUsingJavascript(linkPublic, "Public Link");
 		} catch (Exception e) {
 			Assertion.assertFail("Unable to click pn Public Link due to " + e);
 		}
+			return this;
 	}
 
 	// Disable the toggle button
-	public void disableToggleButton() {
+	public FilesPage disableToggleButton() {
 		try {
 			u.clickElementUsingJavascript(toggleExpirationDate, "Click on Toggle Button");
 		} catch (Exception e) {
 			Assertion.assertFail("Unable to select the Toggle Button due to " + e);
 		}
+		return this;
 	}
 
 	// verify the link is generated
-	public void verifyLinkIsGenerated() {
+	public FilesPage verifyLinkIsGenerated() {
 		try {
 			u.verifyElementIsDisplayed(txtReadOnlyPublicUrl, "Url is dislayed");
 		} catch (Exception e) {
 			Assertion.assertFail("Element is not displayed due to" + e);
 		}
+		
+		u.clickElementUsingJavascript(btnClosePopup, "Create Public Link Popup");
+		return this;
 	}
 
 	// Clicking on Sharing
-	public void clickShare() {
+	public FilesPage clickShare() {
 		try {
 			u.verifyElementIsDisplayed(btnShare, "Share Link");
 			u.clickElementUsingJavascript(btnShare, "Share Link");
 		} catch (Exception e) {
 			Assertion.assertFail("Unable to click on Share due to " + e);
 		}
+		return this;
 	}
 
 	// Verify the error message
-	public void veriFyErrorMessageWhileSharing() {
+	public FilesPage veriFyErrorMessageWhileSharing() {
 		try {
 			u.enterValueInTextbox(txtSearchPeople, property.getProperty("InvalidSearchNameInSharing"));
 			u.pressEnterInTextbox(txtSearchPeople);
@@ -320,6 +336,8 @@ public class FilesPage extends BaseClass {
 		} catch (Exception e) {
 			Assertion.assertFail("Unable to search for Invalid User due to " + e);
 		}
+		
+		return this;
 	}
 
 }

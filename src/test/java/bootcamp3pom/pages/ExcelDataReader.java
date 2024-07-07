@@ -1,4 +1,4 @@
-package bootcamp2testng;
+package bootcamp3pom.pages;
 
 import java.io.IOException;
 

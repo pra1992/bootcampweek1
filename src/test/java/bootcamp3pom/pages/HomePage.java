@@ -1,13 +1,11 @@
-package bootcamp3pom;
+package bootcamp3pom.pages;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
-import bootcamp2testng.BaseClass;
-
 public class HomePage extends BaseClass {
-	private WebDriver driver;
+
 	
 	public HomePage(WebDriver driver) {
 		this.driver= driver;
@@ -23,19 +21,21 @@ public class HomePage extends BaseClass {
 	WebElement btnSales = driver.findElement(By.xpath(
 			"//*[@data-name='Sales']//*[contains(text(),'Manage your sales process with accounts, leads, opportunities, and more')]"));
 	
-	public void clickToggle() {
+	public HomePage clickToggle() {
 		w.waitforVisibilityofElement(btnToggle, "Toggle Button");
 		u.moveToElement(btnToggle, "Toggle Button");
 		u.clickElementUsingJavascript(btnToggle, "Toggle Button");
+		return this;
 	}
 		
 	
-	public void verifyandclickViewAll() {
+	public HomePage verifyandclickViewAll() {
 		u.clickElementUsingJavascript(btnViewAll, "View All Button");
+		return this;
 	}
 	
 	//4. Click Option from App Launcher
-	public void selectServiceConsole(String AppLauncherOption) {
+	public DashboardPage AppLaucherOption(String AppLauncherOption) {
 		u.checkWindowHandles(OpenedWindows);
 		u.clickElementUsingActions(btnServiceConsole, "Servic eConsole Button");
 		switch (AppLauncherOption.toLowerCase()) {	
@@ -46,8 +46,17 @@ public class HomePage extends BaseClass {
 			u.clickElementUsingActions(btnServiceConsole, "Service Console Option");
 			break;
 		}
+		return new DashboardPage(driver);
 		
 	}
+
+
+	 //Verify user logged in successfully
 	
+		public HomePage verifyLoginIsSuccess() {
+			w.waitforTitle("Home | Salesforce");
+			u.verifyTitleOfPage(true, "Home | Salesforce");
+			return this;
+		}
 	
 }

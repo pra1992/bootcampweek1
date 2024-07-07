@@ -1,4 +1,4 @@
-package bootcamp2testng;
+package bootcamp3pom.pages;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;

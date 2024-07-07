@@ -19,6 +19,9 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import bootcamp3pom.pages.Assertion;
+import bootcamp3pom.pages.BaseClass;
+
 public class EditAccount extends BaseClass {
 	
 

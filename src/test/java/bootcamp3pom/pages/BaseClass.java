@@ -1,4 +1,4 @@
-package bootcamp2testng;
+package bootcamp3pom.pages;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -31,6 +31,9 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Parameters;
 import org.testng.asserts.SoftAssert;
 
+import bootcamp2testng.Utilities;
+import bootcamp2testng.WaitUtils;
+
 public class BaseClass {
 
 	public  WebDriver driver;
@@ -38,25 +41,25 @@ public class BaseClass {
 	WebDriverWait wait;
 	// Declaring Java Script Executor
 	JavascriptExecutor js;
-	String AccountName = "Prasanth Sankaran";
-	String PhoneNo = "75023687";
 	String Folder = System.getProperty("user.dir") + "/Images";
 	public WaitUtils w;
 	public Utilities u;
 	public Assertion softAssert;
-	public Properties property;
 	public String WindowHandle = null;
 	public Set<String> OpenedWindows = null;
     public static String downloadDir= null;
     public static String ProjectRoot = null;
+    
+    public String fileName1;
 
+    public Properties property = new Properties();
 
 	@Parameters({ "url", "username", "password" })
 	@BeforeMethod
 	public void setUp(String url, String username, String password) throws IOException, URISyntaxException {
       
 		//Loading the property file
-		 property = new Properties();
+		 
 	        FileInputStream fis = new FileInputStream("src/test/resources/Properties/Config.properties");
 	        property.load(fis);
 	     // ****Creation of WebDriver Object****//
@@ -91,8 +94,7 @@ public class BaseClass {
 
 		w = new WaitUtils(driver);
         u = new Utilities(driver);
-        
-       ;
+   
 		// Locating all the elements in the login page
 
 		WebElement txtUserName = driver.findElement(By.xpath("//*[@id='username']"));
@@ -119,7 +121,7 @@ public class BaseClass {
 	@DataProvider(name = "getdata1")
 	public Object[][] fetchDataForCreateAccount() throws IOException {
 		return ExcelDataReader.readExcelData("CreateAccount");
-//		return new Object[][] { { ExcelDataReader.readExcelData("CreateAccount") } };
+	//	return new Object[][] { { ExcelDataReader.readExcelData("CreateAccount") } };
 	}
 
 	@DataProvider(name = "getdata2")

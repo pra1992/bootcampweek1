@@ -16,6 +16,9 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.asserts.SoftAssert;
 
+import bootcamp3pom.pages.Assertion;
+import bootcamp3pom.pages.BaseClass;
+
 public class Utilities extends BaseClass {
 
 	Actions actions;
