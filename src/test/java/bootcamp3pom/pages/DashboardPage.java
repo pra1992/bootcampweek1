@@ -3,22 +3,19 @@ package bootcamp3pom.pages;
 import java.util.List;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
 
 public class DashboardPage extends BaseClass {
 	
-	public DashboardPage(WebDriver driver) {
-		this.driver = driver;
-	}
+      public DashboardPage() {
+    	  PageFactory.initElements(getDriver(), this);
+      }
 	
-	
-	List<WebElement> tabOptions = driver
-			.findElements(By.xpath("//*[@role='navigation']//*[@role='list']//one-app-nav-bar-item-root//a"));
+      @FindBy(xpath = "//*[@role='navigation']//*[@role='list']//one-app-nav-bar-item-root//a")
+	List<WebElement> tabOptions;
 
-	
-	
-	
 	public SellerHomePage clickAccounts() {
 		u.checkWindowHandles(OpenedWindows);
 		for (int i = 0; i <= (tabOptions.size()) - 1; i++) {
@@ -29,7 +26,7 @@ public class DashboardPage extends BaseClass {
 			}
 			
 	}
-		return new SellerHomePage(driver);
+		return new SellerHomePage();
 		
 }
 

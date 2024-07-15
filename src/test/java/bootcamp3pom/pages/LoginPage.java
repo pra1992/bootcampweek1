@@ -1,20 +1,24 @@
 package bootcamp3pom.pages;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
 
 public class LoginPage extends BaseClass {
 	
-
-	public LoginPage(WebDriver driver) {
-		this.driver = driver;
+	public LoginPage() {
+		PageFactory.initElements(getDriver(), this);
 	}
-   WebElement txtUserName = driver.findElement(By.xpath("//*[@id='username']"));
+	
+   @FindBy(xpath = "//*[@id='username']")
+   WebElement txtUserName;
+   
+	@FindBy(xpath = "//*[@id='password']")
+	WebElement txtPassword;
 
-	WebElement txtPassword = driver.findElement(By.xpath("//*[@id='password']"));
-
-	WebElement btnLogin = driver.findElement(By.xpath("//*[@id='Login']"));
+	@FindBy(xpath = "//*[@id='Login']")
+	WebElement btnLogin;
 	
 	
 	// Entering the UserName, Password and click on Login Button
@@ -30,7 +34,7 @@ public class LoginPage extends BaseClass {
 	
 	public HomePage clickLogin() {
 		u.verifyandclickOnElement(btnLogin, "Login Button");
-		return new HomePage(driver);
+		return new HomePage();
 	}
 	
    

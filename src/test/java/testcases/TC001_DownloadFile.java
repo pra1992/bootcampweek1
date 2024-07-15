@@ -11,21 +11,21 @@ public class TC001_DownloadFile extends BaseClass {
 	
 	@Test(priority = 1 )
 	public void runLogin() {
-		new LoginPage(driver).enterUserName().enterPassword().clickLogin().verifyLoginIsSuccess();
+		new LoginPage().enterUserName().enterPassword().clickLogin().verifyLoginIsSuccess();
 	}
 	
 	@Test(priority = 2)
 	public void navigateToFilesPage() {
-		new HomePage(driver).clickToggle().verifyandclickViewAll().AppLaucherOption("service console");
+		new HomePage().clickToggle().verifyandclickViewAll().AppLaucherOption("service console");
 		}
 	
 	@Test(priority=3)
 	public void identifyLatestUploadedFile() {
-		new FilesPage(driver).selectServiceConsoleOption().identifyRecentDate();
+		new FilesPage().selectServiceConsoleOption().identifyRecentDate();
 	}
 
 	@Test(priority=4)
 	public void downloadFile() {
-		new FilesPage(driver).openRecentFile("Title").downloadFile().verifyFileDownload();
+		new FilesPage().openRecentFile("Title").downloadFile().verifyFileDownload();
 	}
 }

@@ -3,22 +3,25 @@ package bootcamp3pom.pages;
 import java.util.List;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
 
 public class AccountsPage extends BaseClass{
 	
-	public AccountsPage(WebDriver driver) {
-		this.driver = driver;
+	
+	public AccountsPage() {
+		PageFactory.initElements(getDriver(), this);
 	}
 	
 	
-	WebElement txtMessage = driver.findElement(By.xpath("//*[@data-aura-class='forceActionsText']//a"));
+	@FindBy( xpath = "//*[@data-aura-class='forceActionsText']//a")
+	WebElement txtMessage;
 	
-	List<WebElement> tabOptions = driver
-			.findElements(By.xpath("//*[@role='navigation']//*[@role='list']//one-app-nav-bar-item-root//a"));
+	@FindBy(xpath = "//*[@role='navigation']//*[@role='list']//one-app-nav-bar-item-root//a")
+	List<WebElement> tabOptions;
 	
-	public AccountsPage verifyAccountCreationSuccessMessage() {
+	public AccountsPage verifyAccountCreationSuccessMessage(String AccountName) {
 		w.waitforVisibilityofElement(txtMessage , "Account Creation Success Message");
 		if (txtMessage.getText().trim().contains(AccountName)) {
 			Assertion.assertTrue(true, "Account is added successful");
@@ -37,7 +40,7 @@ public class AccountsPage extends BaseClass{
 			}
 			
 	}
-		return new SellerHomePage(driver);
+		return new SellerHomePage();
 		
 }
 

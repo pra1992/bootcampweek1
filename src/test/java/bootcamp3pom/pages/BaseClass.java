@@ -21,6 +21,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
@@ -31,12 +33,13 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Parameters;
 import org.testng.asserts.SoftAssert;
 
-import bootcamp2testng.Utilities;
-import bootcamp2testng.WaitUtils;
+import bootcamp3pom.utils.Utilities;
+import bootcamp3pom.utils.WaitUtils;
+import io.cucumber.testng.AbstractTestNGCucumberTests;
 
-public class BaseClass {
-
-	public  WebDriver driver;
+public class BaseClass extends AbstractTestNGCucumberTests {
+   private static final ThreadLocal<WebDriver>  tlDriver = new ThreadLocal<WebDriver>();
+//	public  WebDriver driver;
 	Actions actions;
 	WebDriverWait wait;
 	// Declaring Java Script Executor
@@ -49,10 +52,32 @@ public class BaseClass {
 	public Set<String> OpenedWindows = null;
     public static String downloadDir= null;
     public static String ProjectRoot = null;
-    
     public String fileName1;
 
     public Properties property = new Properties();
+    
+    public void setDriver( WebDriver driver) {
+    	 tlDriver.set(driver);
+    }
+    
+    public WebDriver getDriver() {
+    	return tlDriver.get();
+    } 
+    
+     public BaseClass() {
+	 PageFactory.initElements(getDriver(), this);
+   }
+    
+  // Locating all the elements in the login page
+     
+     @FindBy(xpath = "//*[@id='username']")
+		WebElement txtUserName;
+     
+     @FindBy(xpath = "//*[@id='password']")
+     WebElement txtPassword;
+     
+     @FindBy(xpath = "//*[@id='Login']")
+     WebElement btnLogin;
 
 	@Parameters({ "url", "username", "password" })
 	@BeforeMethod
@@ -78,41 +103,33 @@ public class BaseClass {
 		options.addArguments("download.prompt_for_download", "false");// disable prompt
 		options.addArguments("download.directory_upgrade", "true"); // enable downloading
 		//Setting the default download directory
+	//driver = new ChromeDriver(options);
+	// Setting up the Browser Options	
 		
-		
-		
-
-		driver = new ChromeDriver(options);
+	setDriver(new ChromeDriver(options) );
+	
 		// Deleting the Cookies
-		driver.manage().deleteAllCookies();
+	getDriver().manage().deleteAllCookies();
 		// Launching the Url//
-		driver.get(url);
+	getDriver().get(url);
 		// maximizing the window and setting up implicit wait
-		driver.manage().window().maximize();
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20));
+	getDriver().manage().window().maximize();
+	getDriver().manage().timeouts().implicitlyWait(Duration.ofSeconds(20));
 		// Declaring Actions Instance
 
-		w = new WaitUtils(driver);
-        u = new Utilities(driver);
-   
-		// Locating all the elements in the login page
-
-		WebElement txtUserName = driver.findElement(By.xpath("//*[@id='username']"));
-
-		WebElement txtPassword = driver.findElement(By.xpath("//*[@id='password']"));
-
-		WebElement btnLogin = driver.findElement(By.xpath("//*[@id='Login']"));
-
+		w = new WaitUtils(getDriver());
+        u = new Utilities(getDriver());
+ 
 		// Entering the UserName, Password and click on Login Button
 		txtUserName.sendKeys(username);
 		txtPassword.sendKeys(password);
 		btnLogin.click();
 
 		// Verifying the title of the login page
-		wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+		wait = new WebDriverWait(getDriver(), Duration.ofSeconds(10));
 		wait.until(ExpectedConditions.titleContains("Home | Salesforce"));
 		// Verify login is successful
-		if (driver.getTitle().contains("Home | Salesforce")) {
+		if (getDriver().getTitle().contains("Home | Salesforce")) {
 			Assert.assertTrue(true, "Login is Successful");
 		}
 
@@ -136,12 +153,12 @@ public class BaseClass {
 	public void tearDown(ITestResult result) throws IOException {
 
 		if (!result.isSuccess()) {
-			TakesScreenshot ss = (TakesScreenshot) driver;
+			TakesScreenshot ss = (TakesScreenshot) getDriver();
 			File source = ss.getScreenshotAs(OutputType.FILE);
 			FileUtils.copyFile(source, new File(Folder));
 		}
 		Assertion.doAssertAll();
-		driver.close();
+		getDriver().close();
 	}
 
 }

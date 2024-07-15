@@ -8,6 +8,7 @@
   <parameter name = "url" value = "https://login.salesforce.com/"></parameter>
   <parameter name = "username" value = "bootcamp_2024@testleaf.com"></parameter>
   <parameter name = "password" value = "Bootcamp@123"></parameter>
+  <parameter name = "browser"  value = "chrome"> </parameter>
   <classes>
    <!-- <class name = "bootcamp2testng.CreateAccount"/> -->
    <class name = "bootcamp2testng.EditAccount"/>

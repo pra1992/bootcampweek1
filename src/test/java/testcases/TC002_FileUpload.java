@@ -14,24 +14,24 @@ public class TC002_FileUpload extends BaseClass {
 
 	@Test(priority = 1 )
 	public void runLogin() {
-		new LoginPage(driver).enterUserName().enterPassword().clickLogin().verifyLoginIsSuccess();	
+		new LoginPage().enterUserName().enterPassword().clickLogin().verifyLoginIsSuccess();	
 	}
 	
 	
 	@Test(priority = 2)
 	public void navigateToFilesPage() {
-		new HomePage(driver).clickToggle().verifyandclickViewAll().AppLaucherOption("service console");
+		new HomePage().clickToggle().verifyandclickViewAll().AppLaucherOption("service console");
 		}
 	
 	
 	@Test(priority = 3)
 	public void verifyIsFileAlreadyUploaded() {
-		new FilesPage(driver).isFileAlreadyUploaded();
+		new FilesPage().isFileAlreadyUploaded();
 	}
 	
 	@Test(priority = 4)
 	public void uploadFileAndVerify() throws AWTException, IOException {
-		new FilesPage(driver).uploadFile().verifyFileDownload();
+		new FilesPage().uploadFile().verifyFileDownload();
 	}
 	
 }

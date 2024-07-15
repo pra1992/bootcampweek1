@@ -1,25 +1,27 @@
 package bootcamp3pom.pages;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
 
 public class HomePage extends BaseClass {
 
-	
-	public HomePage(WebDriver driver) {
-		this.driver= driver;
+	public HomePage() {
+		PageFactory.initElements(getDriver(), this);
 	}
-   
-	WebElement btnToggle = driver.findElement(By.xpath("//*[@title='App Launcher']"));
+
+	@FindBy(xpath = "//*[@title='App Launcher']")
+	WebElement btnToggle;
+
+	@FindBy(xpath = "//*[@kx-type='underline']")
+	WebElement btnViewAll;
 	
-	WebElement btnViewAll = driver.findElement(By.xpath("//*[@kx-type='underline']"));
-	
-	WebElement btnServiceConsole = driver.findElement(By.xpath(
+	WebElement btnServiceConsole = getDriver().findElement(By.xpath(
 			"//*[@data-name='Service Console']//*[contains(text(),'(Lightning Experience) Lets support agents work with multiple records across customer service channels on one screen')]"));
 	
-	WebElement btnSales = driver.findElement(By.xpath(
-			"//*[@data-name='Sales']//*[contains(text(),'Manage your sales process with accounts, leads, opportunities, and more')]"));
+	@FindBy(xpath = "//*[@data-name='Sales']//*[contains(text(),'Manage your sales process with accounts, leads, opportunities, and more')]")
+	WebElement btnSales;
 	
 	public HomePage clickToggle() {
 		w.waitforVisibilityofElement(btnToggle, "Toggle Button");
@@ -46,7 +48,7 @@ public class HomePage extends BaseClass {
 			u.clickElementUsingActions(btnServiceConsole, "Service Console Option");
 			break;
 		}
-		return new DashboardPage(driver);
+		return new DashboardPage();
 		
 	}
 

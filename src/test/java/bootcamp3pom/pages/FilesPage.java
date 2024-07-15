@@ -14,9 +14,11 @@ import org.joda.time.DateTime;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
 import org.testng.Assert;
 
-import bootcamp2testng.Utilities;
+import bootcamp3pom.utils.Utilities;
 
 public class FilesPage extends BaseClass {
 
@@ -32,91 +34,116 @@ public class FilesPage extends BaseClass {
 
 	Robot robot;
 
-	public FilesPage(WebDriver driver) {
-		this.driver = driver;
+	public FilesPage() {
 		dateStrings = new ArrayList<String>();
+		PageFactory.initElements(getDriver(), this);
 	}
 
-	WebElement ddNavigationMenu = driver.findElement(By.xpath("//*[@aria-label = 'Show Navigation Menu']"));
-
-	List<WebElement> optionsSeviceConsole = driver.findElements(By.xpath("//*[@aria-label = 'Show Navigation Menu']/following-sibling::section//li"));
+	@FindBy(xpath = "//*[@aria-label = 'Show Navigation Menu']")
+	WebElement ddNavigationMenu;
 	
-	WebElement tblHeaderLastModified = driver.findElement(
-			By.xpath("//table[@data-aura-class='uiVirtualDataTable']//thead//th[@title='Last Modified Date']"));
-
-	List<WebElement> dateLastModifiedDate = driver.findElements(By.xpath(
-			"//table[@data-aura-class='uiVirtualDataTable']//thead//th[@title='Last Modified Date']/../../following-sibling::tbody//*[@class='slds-truncate uiOutputDateTime']"));
-
-	List<WebElement> colTitle = driver.findElements(By.xpath(
-			"//table[@data-aura-class='uiVirtualDataTable']//thead//th[@title='Title']/../../following-sibling::tbody//*[@class='itemTitle desktop outputTextOverride uiOutputText']"));
-
-	List<WebElement> tblFiles = driver
-			.findElements(By.xpath("//table[@data-aura-class='uiVirtualDataTable']//tbody//tr"));
-
-	List<WebElement> tblFilesColumn = driver
-			.findElements(By.xpath("(//*[@class='itemTitle desktop outputTextOverride uiOutputText'])"));
-	WebElement linkPublic = driver.findElement(By.xpath("//*[text()='Public Link']"));
-
-	WebElement toggleExpirationDate = driver
-			.findElement(By.xpath("//*[text()='Expiration date']/..//*[@part='indicator']"));
-
-	WebElement btnCreateLink = driver.findElement(By.xpath("//*[@title='Create Link']"));
-
-	WebElement btnCreate = driver.findElement(By.xpath("//*[@title='Create']"));
-
-	WebElement btnCopyLink = driver.findElement(By.xpath("//*[@title='Copy Link']"));
-
-	WebElement txtReadOnlyPublicUrl = driver
-			.findElement(By.xpath("//lightning-input[contains(@class,'recordViewUrl ')]//input"));
-
-	WebElement btnClosePopup = driver.findElement(By.xpath("//*[@title='Close this window']"));
-
-	WebElement btnDownload = driver.findElement(By.xpath("//*[text()='Download']"));
-
-	WebElement btnShare = driver.findElement(By.xpath("//*[text()='Share']"));
-
-	WebElement txtSearchPeople = driver.findElement(By.xpath("//*[@title='Search People']"));
-
-	WebElement modalPeopleResults = driver.findElement(By.xpath("//h1[contains(text(),'People Results')]"));
-	List<WebElement> tblpeopleResults = driver.findElements(By.xpath("//*[@data-aura-class='']//tbody//td"));
-
-	WebElement errorMessageCannotShare = driver.findElement(By.xpath("//*[@class='form-element__help']"));
-
-	WebElement deleteShareWith = driver.findElement(By.xpath("//*[@class='deleteIcon']"));
-
-	WebElement txtAddMessage = driver.findElement(By.xpath("//*[@placeholder='Add a message...']"));
-
-	WebElement successMessageShare = driver
-			.findElement(By.xpath("//*[@class='toastMsg uiOutputText forceActionsText']"));
-
-	WebElement btnUpload = driver.findElement(By.xpath("//a[@title='Upload Files']"));
-
-	WebElement messageSuccessUpload = driver.findElement(By.xpath("//*[@data-aura-class='forceToastMessage']"));
-
-	WebElement messageFileUpload = driver.findElement(By.xpath("//*[@data-aura-class='forceContentPanelFooter']"));
-
-	WebElement btnDone = driver.findElement(By.xpath("//*[text()='Done']"));
-
-	List<WebElement> ddAction = driver.findElements(By.xpath(
-			"//table[@data-aura-class='uiVirtualDataTable']//thead//th[@title='Title']/../../following-sibling::tbody//a[@role='button']"));
-
-	List<WebElement> listActionOptions = driver
-			.findElements(By.xpath("//*[contains(@class,'visible positioned')]//li"));
-
-	WebElement labelFileName = driver
-			.findElement(By.xpath("//*[contains(@class,'entityNameTitle ')]/following-sibling::div"));
-
-	WebElement lblFileExtension = driver
-			.findElement(By.xpath("//span[@title='File Extension']/following-sibling::div"));
-
-	WebElement btnCloseTestCase = driver
-			.findElement(By.xpath("//button[contains(@title," + "Close" + FilesPage.FileName + " )]"));
-
-	WebElement hdrDeletePopup = driver.findElement(By.xpath("//h1[text()='Delete File?']"));
-
-	WebElement btnDelete = driver.findElement(By.xpath("//button[@title='Delete']"));
-
-	WebElement messageSuccessDelete = driver.findElement(By.xpath("//*[@data-aura-class='forceActionsText']"));
+	@FindBy(xpath = "//*[@aria-label = 'Show Navigation Menu']/following-sibling::section//li")
+	List<WebElement> optionsSeviceConsole;
+	
+	@FindBy(xpath = "//table[@data-aura-class='uiVirtualDataTable']//thead//th[@title='Last Modified Date']")
+	WebElement tblHeaderLastModified;
+	
+	@FindBy(xpath = "//table[@data-aura-class='uiVirtualDataTable']//thead//th[@title='Last Modified Date']/../../following-sibling::tbody//*[@class='slds-truncate uiOutputDateTime']")
+	List<WebElement> dateLastModifiedDate;
+	
+	@FindBy(xpath = "//table[@data-aura-class='uiVirtualDataTable']//thead//th[@title='Title']/../../following-sibling::tbody//*[@class='itemTitle desktop outputTextOverride uiOutputText']")
+	List<WebElement> colTitle;
+	
+	@FindBy(xpath = "//table[@data-aura-class='uiVirtualDataTable']//tbody//tr")
+	List<WebElement> tblFiles;
+	
+	@FindBy(xpath = "(//*[@class='itemTitle desktop outputTextOverride uiOutputText'])")
+	List<WebElement> tblFilesColumn;
+	
+	@FindBy(xpath = "//*[text()='Public Link']")
+	WebElement linkPublic;
+	
+	@FindBy(xpath = "//*[text()='Expiration date']/..//*[@part='indicator']")
+	WebElement toggleExpirationDate;
+	
+	@FindBy(xpath = "//*[@title='Create Link']")
+	WebElement btnCreateLink;
+	
+	@FindBy(xpath = "//*[@title='Create']")
+	WebElement btnCreate;
+	
+	@FindBy(xpath = "//*[@title='Copy Link']")
+	WebElement btnCopyLink;
+	
+	@FindBy(xpath = "//lightning-input[contains(@class,'recordViewUrl ')]//input")
+	WebElement txtReadOnlyPublicUrl;
+	
+	@FindBy(xpath = "//*[@title='Close this window']")
+	WebElement btnClosePopup;
+	
+	@FindBy(xpath = "//*[text()='Download']")
+	WebElement btnDownload;
+	
+	@FindBy(xpath = "//*[text()='Share']")
+	WebElement btnShare;
+	
+	@FindBy(xpath= "//*[@title='Search People']")
+	WebElement txtSearchPeople;
+	
+	@FindBy(xpath = "//h1[contains(text(),'People Results')]")
+	WebElement modalPeopleResults;
+	
+	@FindBy(xpath = "//*[@data-aura-class='']//tbody//td")
+	List<WebElement> tblpeopleResults;
+	
+	@FindBy(xpath = "//*[@class='form-element__help']")
+	WebElement errorMessageCannotShare;
+	
+	@FindBy(xpath = "//*[@class='deleteIcon']")
+	WebElement deleteShareWith;
+	
+	@FindBy(xpath = "//*[@placeholder='Add a message...']")
+	WebElement txtAddMessage;
+	
+	@FindBy(xpath = "//*[@class='toastMsg uiOutputText forceActionsText']")
+	WebElement successMessageShare;
+	
+	@FindBy(xpath = "//a[@title='Upload Files']")
+	WebElement btnUpload;
+	
+	@FindBy(xpath= "//*[@data-aura-class='forceToastMessage']")
+	WebElement messageSuccessUpload;
+	
+	@FindBy(xpath = "//*[@data-aura-class='forceContentPanelFooter']")
+	WebElement messageFileUpload;
+	
+	@FindBy(xpath = "//*[text()='Done']")
+	WebElement btnDone;
+	
+	@FindBy(xpath = "//table[@data-aura-class='uiVirtualDataTable']//thead//th[@title='Title']/../../following-sibling::tbody//a[@role='button']")
+	List<WebElement> ddAction;
+	
+	@FindBy(xpath = "//*[contains(@class,'visible positioned')]//li")
+	List<WebElement> listActionOptions;
+	
+	@FindBy(xpath = "//*[contains(@class,'entityNameTitle ')]/following-sibling::div")
+	WebElement labelFileName;
+	
+	@FindBy(xpath = "//span[@title='File Extension']/following-sibling::div")
+	WebElement lblFileExtension;
+	
+	@FindBy(xpath = "//button[contains(@title,\" + \"Close\" + FilesPage.FileName + \" )]")
+	WebElement btnCloseTestCase;
+	
+	@FindBy(xpath = "//h1[text()='Delete File?']")
+	WebElement hdrDeletePopup;
+	
+	@FindBy(xpath = "//button[@title='Delete']")
+	WebElement btnDelete;
+	
+	@FindBy(xpath = "//*[@data-aura-class='forceActionsText']")
+	WebElement messageSuccessDelete;
+	
 
 	public static String getDownloadedFileName() {
 		return DownloadedFileName;
@@ -172,14 +199,14 @@ public class FilesPage extends BaseClass {
 
 					for (int j = 0; j <= (tblFiles.size()) - 1; j++) {
 						if (j == value) {
-							WebElement FileLink = driver
+							WebElement FileLink = getDriver()
 									.findElement(By.xpath("//table[@data-aura-class='uiVirtualDataTable']//tbody//tr["
 											+ j + "]//th[" + i + "]//a"));
-							DownloadedFileExtension = driver
+							DownloadedFileExtension = getDriver()
 									.findElement(By.xpath("//table[@data-aura-class='uiVirtualDataTable']//tbody//tr["
 											+ j + "]//th[" + i + "]//a//span[@class='slds-assistive-text']"))
 									.getText().trim();
-							DownloadedFileName = driver.findElement(By.xpath(
+							DownloadedFileName = getDriver().findElement(By.xpath(
 									"(//*[@class='itemTitle desktop outputTextOverride uiOutputText'])[" + j + "]"))
 									.getText().trim();
 							u.clickElementUsingJavascript(FileLink, "File To be downloaded");

@@ -19,44 +19,44 @@ public class TC004_CreateAccount extends BaseClass {
 	
 	@Test(priority = 1 )
 	public void runLogin() {
-		new LoginPage(driver).enterUserName().enterPassword().clickLogin().verifyLoginIsSuccess();
+		new LoginPage().enterUserName().enterPassword().clickLogin().verifyLoginIsSuccess();
 	}
 	
 	
 	
 	@Test(priority = 2)
 	public void navigateToSalesPage() {
-		new HomePage(driver).clickToggle().verifyandclickViewAll().AppLaucherOption("sales");
+		new HomePage().clickToggle().verifyandclickViewAll().AppLaucherOption("sales");
 		}
 
 	@Test(priority = 3)
 	public void navigateToCreateAccountPage() {
-		new DashboardPage(driver).clickAccounts();
+		new DashboardPage().clickAccounts();
 		}
 	
 	@Test(priority = 4)
 	public void openCreateNewAccountPopup() {
-		new SellerHomePage(driver).clickNewButton().verifyCreateNewAccountPopupIsOpened();
+		new SellerHomePage().clickNewButton().verifyCreateNewAccountPopupIsOpened();
 		}
 	
 	@Test(priority = 5 , dataProvider = "getdata1")
 	public void fillAccountDetailsAndClickSave(String AccountName, String AccountType) {
-		new SellerHomePage(driver).enterAccountDetailsInCreateNewAccountPopup(AccountName , AccountType).clickSaveButton();
+		new SellerHomePage().enterAccountDetailsInCreateNewAccountPopup(AccountName , AccountType).clickSaveButton();
 		}
 	
-	@Test(priority = 6)
-	public void verifyAccountCreationSuccesMessage() {
-		new AccountsPage(driver).verifyAccountCreationSuccessMessage();
+	@Test(priority = 6, dataProvider = "getdata1")
+	public void verifyAccountCreationSuccesMessage(String AccountName) {
+		new AccountsPage().verifyAccountCreationSuccessMessage(AccountName);
 		}
 	
 	@Test(priority = 7 , dataProvider = "getdata1")
-	public void searchForNewlyAddedAccountInTable(String AccountName, String AccountType) {
-//		new SellerHomePage(driver).searchForNewAccountInTable();
-		new DashboardPage(driver).clickAccounts().searchForNewAccountInTable(AccountName, AccountType);
+	public void searchForNewlyAddedAccountInTable(String AccountName) {
+//		new SellerHomePage(getDriver()).searchForNewAccountInTable();
+		new DashboardPage().clickAccounts().searchForNewAccountInTable(AccountName);
 		}
 	
 	@Test(priority = 8,  dataProvider = "getdata1")
-	public void verifyNewlyAddedAccountInAccountsTable(String AccountName, String AccountType) {
-		new SellerHomePage(driver).valideAddedAccountInTable(AccountName, AccountType );
+	public void verifyNewlyAddedAccountInAccountsTable(String AccountName) {
+		new SellerHomePage().valideAddedAccountInTable(AccountName);
 		}
 }
