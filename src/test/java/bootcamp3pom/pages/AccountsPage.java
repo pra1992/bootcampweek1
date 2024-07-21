@@ -23,8 +23,12 @@ public class AccountsPage extends BaseClass{
 	
 	public AccountsPage verifyAccountCreationSuccessMessage(String AccountName) {
 		w.waitforVisibilityofElement(txtMessage , "Account Creation Success Message");
+		try {
 		if (txtMessage.getText().trim().contains(AccountName)) {
 			Assertion.assertTrue(true, "Account is added successful");
+			reportStep("Account is added successful", "pass");
+		}} catch(Exception e) {
+			reportStep("User Name is not Entered ", "fail");
 		}
 		return this;
 	}
@@ -37,8 +41,7 @@ public class AccountsPage extends BaseClass{
 			if (TabName.equals("Accounts")) {
 				u.clickElementUsingJavascript(tabOptions.get(i), "Accounts");
 				break;
-			}
-			
+			}			
 	}
 		return new SellerHomePage();
 		

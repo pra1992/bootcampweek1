@@ -5,13 +5,17 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
 import java.time.Duration;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
+import org.joda.time.LocalDateTime;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.OutputType;
@@ -28,13 +32,22 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.ITestResult;
 import org.testng.annotations.AfterMethod;
+import org.testng.annotations.AfterSuite;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Parameters;
 import org.testng.asserts.SoftAssert;
 
+import com.aventstack.extentreports.ExtentReports;
+import com.aventstack.extentreports.ExtentTest;
+import com.aventstack.extentreports.MediaEntityBuilder;
+import com.aventstack.extentreports.reporter.ExtentHtmlReporter;
+
 import bootcamp3pom.utils.Utilities;
 import bootcamp3pom.utils.WaitUtils;
+import io.cucumber.java.Scenario;
 import io.cucumber.testng.AbstractTestNGCucumberTests;
 
 public class BaseClass extends AbstractTestNGCucumberTests {
@@ -53,6 +66,8 @@ public class BaseClass extends AbstractTestNGCucumberTests {
     public static String downloadDir= null;
     public static String ProjectRoot = null;
     public String fileName1;
+    public String testName, testDescription, testAuthor, testCategory;
+    public static ExtentTest test, node;
 
     public Properties property = new Properties();
     
@@ -83,6 +98,7 @@ public class BaseClass extends AbstractTestNGCucumberTests {
 	@BeforeMethod
 	public void setUp(String url, String username, String password) throws IOException, URISyntaxException {
       
+		 test.createNode(testName);
 		//Loading the property file
 		 
 	        FileInputStream fis = new FileInputStream("src/test/resources/Properties/Config.properties");
@@ -90,7 +106,6 @@ public class BaseClass extends AbstractTestNGCucumberTests {
 	     // ****Creation of WebDriver Object****//
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("profile.default_content_settings.popups", 0);
-	    ProjectRoot = new File(getClass().getProtectionDomain().getCodeSource().getLocation().toURI()).getParent();
 		downloadDir= ProjectRoot + "\\src\\test\\resources\\download";
 		File downloadFolder = new File(downloadDir);
 		if(!downloadFolder.exists()) {
@@ -148,17 +163,55 @@ public class BaseClass extends AbstractTestNGCucumberTests {
 //				{ ExcelDataReader.readExcelData("EditAccount") } 
 //				};
 	}
+	
+	@BeforeClass
+	public void testDetails(Scenario scenario) {
+		testName = scenario.getName();
+		new ExtentReports().createTest(testName);
+//		test.assignAuthor(testAuthor);
+//		test.assignCategory(testCategory);
+	}
 
+	@BeforeSuite
+	public void startReport() throws URISyntaxException {
+		ProjectRoot = new File(getClass().getProtectionDomain().getCodeSource().getLocation().toURI()).getParent();
+		String reportsFolder = ProjectRoot + "\\reports";
+		if(! new File(reportsFolder).exists()) {
+			new File(reportsFolder).mkdir();
+		}		//Getting the Current Date Time			
+			ExtentHtmlReporter reporter = new ExtentHtmlReporter( reportsFolder + "\\report_" + new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss").format(new Date()) + ".html");
+			new ExtentReports().attachReporter(reporter);
+		} 
+		
+		    
+	
+	
 	@AfterMethod
 	public void tearDown(ITestResult result) throws IOException {
 
 		if (!result.isSuccess()) {
 			TakesScreenshot ss = (TakesScreenshot) getDriver();
+			
 			File source = ss.getScreenshotAs(OutputType.FILE);
-			FileUtils.copyFile(source, new File(Folder));
+			FileUtils.copyFile(source, new File(Folder + "\\img " + testName + ".png"));
 		}
 		Assertion.doAssertAll();
 		getDriver().close();
+	}
+	
+	@AfterSuite
+	public void endSuite() {
+		new ExtentReports().flush();
+	}
+	
+	
+	public  void reportStep(String message, String Status) {
+		if	(Status.equalsIgnoreCase("pass")) {
+			node.pass(message);
+		}else if(Status.equalsIgnoreCase("fail")) {
+			node.fail(message);
+			throw new RuntimeException("See the report for the failure");
+		}
 	}
 
 }

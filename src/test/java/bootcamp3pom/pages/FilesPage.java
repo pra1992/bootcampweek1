@@ -236,9 +236,11 @@ public class FilesPage extends BaseClass {
 			File file = new File(downloadDir, FilesPage.DownloadedFileName);
 			if (file.exists() && file.isFile()) {
 				Assertion.assertTrue(true, "File is successfully downloaded");
+				reportStep("File is successfully downloaded", "pass");
 			}
 		} catch (Exception e) {
-			Assertion.assertFail("File is not downloaded sue to " + e);
+			Assertion.assertFail("File is not downloaded due to " + e);
+			reportStep("File is not downloaded due to", "fail");
 		}
 		return this;
 	}
@@ -298,7 +300,12 @@ public class FilesPage extends BaseClass {
 	}
 	
 	public FilesPage verifyUploadIsSuccess() {
+		try {
 		u.verifyElementIsDisplayed(messageSuccessUpload, "Success Toaster Message");
+		reportStep("Success Toaster Message", "pass");
+		}catch(Exception e) {
+	reportStep("Success Toaster Message is not displayed", "fail");		
+		}
 		return this;
 	}
 

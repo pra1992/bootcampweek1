@@ -144,8 +144,12 @@ public class SellerHomePage extends BaseClass {
 
 	public AccountsPage verifyAccountCreationSuccessMessage(String AccountName) {
 		w.waitforVisibilityofElement(txtMessage, "Account Creation Success Message");
+		try {
 		if (txtMessage.getText().trim().contains(AccountName)) {
 			Assertion.assertTrue(true, "Account is added successful");
+			reportStep("Account is added successfully", "pass");
+		}}catch (Exception e) {
+			reportStep("Account is not added", "fail");
 		}
 		return new AccountsPage();
 	}
@@ -182,6 +186,7 @@ public class SellerHomePage extends BaseClass {
 				if ((getDriver().findElements(By.xpath("//table/tbody/tr"))).get(i).getText().trim()
 						.contains(AccountName)) {
 					Assertion.assertTrue(true, "Account Name is verified in the Table");
+					reportStep("Account name is verified in the Table", "pass");
 				}
 			} catch (StaleElementReferenceException e) {
 				w.waitforStalenessofElement(getDriver().findElements(By.xpath("//table/tbody/tr")).get(i),
@@ -369,21 +374,36 @@ public class SellerHomePage extends BaseClass {
 	// Verify the Success Toaster message
 
 	public SellerHomePage verifyEditSuccessToasterMessage() {
+		try {
 		if (getDriver().findElement(By.xpath("//*[@data-aura-class='forceActionsText']")).getText().trim()
 				.contains("saved")) {
 			System.out.println("Account is saved successful");
 			Assertion.assertSuccessMessage(true, "Account is saved successful");
+			reportStep("Account Edit message is displayed", "pass");
 		}
-		return this;
+		
+	}catch (Exception e) {
+		reportStep("Account Edit Step is not displayed", "fail");}
+	return this;
 	}
 
 	// Verifying the added Phone Number in the Grid
 	public SellerHomePage verifyTheEditedPhoneNoInTheGrid(String PhoneNo) {
+		try {
 		if (gridPhoneNoValue.getText().trim().equals(PhoneNo)) {
 			System.out.println("Phone Number is verified Successfully");
 			Assertion.assertSuccessMessage(true, "Phone Number is verified Successfully");
+			reportStep("Phone Number is verified Successfully", "pass");
 		}
-		return this;
+		
+	}catch(Exception e) {
+		reportStep("Phone Number is not verified", "fail");
 	}
-
+	return this;
+}
+	
+	
+	
+	
+	
 }
