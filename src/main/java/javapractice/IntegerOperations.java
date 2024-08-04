@@ -1,4 +1,4 @@
-package interview;
+package javapractice;
 
 import java.lang.reflect.Array;
 

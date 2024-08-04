@@ -128,7 +128,7 @@ public class Utilities extends BaseClass {
 	}
 
 // Checking for Window Handles
-	public void checkWindowHandles(Set<String> windows) {
+	public void checkWindowHandles() {
 		WindowHandle = driver.getWindowHandle();
 		windows = driver.getWindowHandles();
 		for (String OpenWindow : windows) {

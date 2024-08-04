@@ -8,17 +8,14 @@ public class CountChars {
 	
 	public static void countChars(String Input) {
 		char[] A = Input.toCharArray();
-		Map<Character, Integer> mp = new HashMap<Character, Integer>();
+		Map<Character, Integer> mp = new HashMap<Character,Integer>();
+		for( char temp: A ) {
+			int count = mp.getOrDefault(temp, 0);
+			mp.put(temp, count+1);
+		}
 		
-		for( char temp:A) {
-			int count  = mp.getOrDefault(temp, 0);
-			         mp.put(temp, count+1);
-			  
-	}
-		for(char temp1: mp.keySet()) {
-			int count1 = mp.get(temp1);
-			System.out.println( temp1 + " is repeated so many times " + count1);
-			
+		for (Map.Entry<Character, Integer> m : mp.entrySet()) {
+			System.out.println(m.getKey() + " " + "is repeated" + " " +  m.getValue() + " " + "times");
 		}
 }
 	

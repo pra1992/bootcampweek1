@@ -7,17 +7,16 @@ public class StringManipilation {
 	public static void stringManipulate(String Input) {
 		 StringBuilder S = new StringBuilder();
 		 StringBuilder D = new StringBuilder();
-		char[] A = Input.toCharArray();
-		 for( char temp :A) {
-			 if(Character.isLetterOrDigit(temp)) {
-				S.append(temp) ;
-			 }
-			 else {
-				 D.append(temp);
-			 }
-		 }
-		System.out.println("Normal Value" + S.toString());
-		System.out.println("Normal Value" + D.toString());
+		
+		  char[] A = Input.toCharArray();
+		  for (char c : A) {
+			  if(Character.isLetterOrDigit(c)) {
+				  S.append(c);
+			  }
+			  else if(! Character.isLetterOrDigit(c)) {
+				  D.append(c);
+			  }
+		}
 	}
 	
 	public static void main(String[] args) {
